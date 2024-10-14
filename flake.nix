@@ -15,6 +15,8 @@
     inputs.snowfall-lib.mkFlake {
       inherit inputs;
       src = ./.;
+      # https://snowfall.org/guides/lib/channels/
+      channels-config.allowUnfree = true;
 
       snowfall = {
         namespace = "zen";
