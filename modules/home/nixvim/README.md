@@ -17,20 +17,20 @@
 
 | Keymap  | Action |
 | :----:  | :----: |
-| <space> | Leader |
-| <leader>tk | Telescope keymaps |
-| <C-h> | panes: move left |
-| <C-l> | panes: move right |
-| <C-j> | panes: move up |
-| <C-k> | panes: move down |
-| <C-Up> | panes: resize +2 lines to height|
-| <C-Down> | panes: resize -2 lines to height |
-| <C-Left> | panes: resize +2 lines to width |
-| <C-Right> | panes: resize -2 lines to width |
-| <S-l> | buffer: next buffer |
-| <S-h> | buffer: previous buffer |
+| `<space>` | Leader |
+| `<leader>`tk | Telescope keymaps |
+| `<C-h>` | panes: move left |
+| `<C-l>` | panes: move right |
+| `<C-j>` | panes: move up |
+| `<C-k>` | panes: move down |
+| `<C-Up>` | panes: resize +2 lines to height|
+| `<C-Down>` | panes: resize -2 lines to height |
+| `<C-Left>` | panes: resize +2 lines to width |
+| `<C-Right>` | panes: resize -2 lines to width |
+| `<S-l>` | buffer: next buffer |
+| `<S-h>` | buffer: previous buffer |
 | jk | go to normal mode from insert mode | 
 | < | indent: dedent and stay in visual mode |
 | > | indent: indent and stay in visual mode |
-| <A-j> | visual: move highlighted text up a line |
-| <A-k> | visual: move highlighted text down a line |
+| `<A-j>` | visual: move highlighted text up a line |
+| `<A-k>` | visual: move highlighted text down a line |
