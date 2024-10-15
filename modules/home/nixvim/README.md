@@ -5,6 +5,8 @@
 
 ## Options
 
+Set in `default.nix`.
+
 * Set shell alias for vim and vi to map to nvim
 * Show line numbers, relative
 * Show cursor line
@@ -14,6 +16,8 @@
 * Keep 8 lines/cols of context if possible
 
 ## Keymaps
+
+Set in `keymaps.nix` and maybe also in some files in `plugins/` where appropriate.
 
 | Keymap  | Action |
 | :----:  | :----: |
