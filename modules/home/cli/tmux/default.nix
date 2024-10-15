@@ -10,7 +10,7 @@ let
   cfg = config.${namespace}.tmux;
 in
 {
-  options.${namespace}.tmux.enable = mkEnableOption; 
+  options.${namespace}.tmux.enable = mkEnableOption "zen home config: enable tmux configuration"; 
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
