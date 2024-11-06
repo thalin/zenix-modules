@@ -1,5 +1,15 @@
-{ config, pkgs, inputs, ... }:
-
+{
+  lib,
+  config,
+  pkgs,
+  namespace,
+  inputs,
+  ...
+}:
+let 
+  inherit (lib) mkEnableOption mkIf;
+  cfg = config.${namespace}.nixvim;
+in
 {
   imports = [
     inputs.nixvim.homeManagerModules.nixvim

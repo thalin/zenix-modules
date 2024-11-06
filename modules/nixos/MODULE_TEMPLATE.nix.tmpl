@@ -1,0 +1,41 @@
+# This file is a template to copy/paste to make a new zen module
+# Provides a rough example for how to format these modules to get and use options
+
+{ lib, config, ... }:
+let
+  # prefer this sytax to "with lib;" before the let statement.
+  # https://nix.dev/guides/best-practices#with-scopes
+  inherit (lib) mkEnableOption mkOption mkIf mkDefault types;
+  cfg = config.zen.FILENAME;
+in {
+
+  options.zen.FILENAME = {
+    enable = mkEnableOption "zen config: <description of module>";
+    dpi = mkOption {
+      # 92 is normal? Higher density displays do exist though
+      type = types.int;
+      default = 92;
+    };
+    scale_up = mkOption {
+      # should be >= 1.0 usually
+      type = types.str;
+      default = "1.0";
+    };
+    scale_down = mkOption {
+      # should be <= 1.0 usually
+      type = types.str;
+      default = "1.0";
+    };
+  };
+
+  config = mkIf cfg.enable {
+    # EXAMPLE using variables from above
+    environment.variables = {
+      GDK_SCALE = cfg.scale_down;
+      GDK_DPI_SCALE = cfg.scale_up;
+      _JAVA_OPTIONS = "-Dsun.java2d.uiScale=${cfg.scale_down}";
+    };
+
+    services.xserver.dpi = mkDefault cfg.dpi;
+  };
+}
