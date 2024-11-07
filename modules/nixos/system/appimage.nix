@@ -6,15 +6,14 @@
   config,
   pkgs,
   lib,
-  namespace,
   ...
 }:
 let
-  cfg = config.${namespace}.gui.appimage;
+  cfg = config.zen.system.appimage;
   inherit (lib) mkEnableOption mkIf;
 in
 {
-  options.${namespace}.gui.appimage.enable = mkEnableOption "${namespace} config: enable appimage support";
+  options.zen.system.appimage.enable = mkEnableOption "zen config: enable appimage support";
 
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [

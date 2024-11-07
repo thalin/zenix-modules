@@ -1,10 +1,10 @@
 { lib, config, ... }:
 let
-  cfg = config.zen.touchpad;
+  cfg = config.zen.system.touchpad;
   inherit (lib) mkEnableOption mkIf;
 in {
 
-  options.zen.touchpad = {
+  options.zen.system.touchpad = {
     enable = mkEnableOption "zen config: touchpad setup";
   };
 

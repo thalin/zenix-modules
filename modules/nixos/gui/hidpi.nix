@@ -4,11 +4,11 @@
 
 { lib, config, ... }:
 let
-  cfg = config.zen.hidpi;
+  cfg = config.zen.gui.hidpi;
   inherit (lib) mkEnableOption mkOption mkIf mkDefault types;
 in {
 
-  options.zen.hidpi = {
+  options.zen.gui.hidpi = {
     enable = mkEnableOption "zen config: enable hidpi stuff";
     dpi = mkOption {
       # 92 is normal? Higher density displays do exist though

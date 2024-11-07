@@ -2,10 +2,10 @@
   config, pkgs, lib, ...
 }: 
 let
-  cfg = config.zen.sound;
+  cfg = config.zen.system.sound;
 in
 {
-  options.zen.sound = {
+  options.zen.system.sound = {
     enable = lib.mkEnableOption "zen config: enable sound services";
   };
 

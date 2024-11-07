@@ -11,14 +11,14 @@
   ...
 }:
 let
-  cfg_path = "${namespace}.system.kvm-host";
+  cfg_path = "zen.system.kvm-host";
   #cfg = config.${cfg_path};
-  cfg = config.${namespace}.system.kvm-host;
+  cfg = config.zen.system.kvm-host;
   inherit (lib) mkEnableOption mkIf;
 in
 {
-  # options.${cfg_path}.enable = mkEnableOption "${namespace} config: enable kvm-host support";
-  options.${namespace}.system.kvm-host.enable = mkEnableOption "${namespace} config: enable kvm-host support";
+  # options.${cfg_path}.enable = mkEnableOption "zen config: enable kvm-host support";
+  options.zen.system.kvm-host.enable = mkEnableOption "zen config: enable kvm-host support";
 
   config = mkIf cfg.enable {
     virtualisation.libvirtd.enable = true;

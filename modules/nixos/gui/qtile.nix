@@ -14,7 +14,7 @@ let
     manage = "desktop";
     name = "qtile";
     start = ''
-    $HOME/.config/qtile/autostart.sh >> $HOME/qtile-config.log
+    $HOME/.config/qtile/autostart.sh >> $HOME/.config/qtile/qtile.log
     ${qtile_pkg}/bin/qtile start -c $HOME/.config/qtile/config.py &
     waitPID=$!
     '';
@@ -23,7 +23,7 @@ let
     manage = "desktop";
     name = "qtile-wayland";
     start = ''
-    $HOME/.config/qtile/autostart-wayland.sh >> $HOME/qtile-config.log
+    $HOME/.config/qtile/autostart-wayland.sh >> $HOME/.config/qtile/qtile.log
     ${qtile_pkg}/bin/qtile start -c $HOME/.config/qtile/config.py -b wayland &
     waitPID=$!
     '';

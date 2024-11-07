@@ -1,7 +1,7 @@
 # GUI config at the system level.
 
 {
-  config, pkgs, lib, configLib, ...
+  inputs, outputs, system, config, pkgs, lib, configLib, ...
 }: 
 let
   cfg = config.zen.gui;
@@ -10,10 +10,11 @@ let
 in
 {
   imports = [
-    ./touchpad.nix
-    ./sound.nix
+    inputs.stylix.nixosModules.stylix
     ./hidpi.nix
     ./stylix.nix
+    ./bambu.nix
+    ./qtile.nix
   ];
 
   options.zen.gui = {
@@ -38,7 +39,9 @@ in
     # Enable SDDM display manager
     services.displayManager.sddm = {
       enable = true;
-      theme = "${import ../../../packages/ariel-sddm-theme.nix { inherit pkgs; }}";
+      # theme = pkgs.ariel-sddm-theme;
+      # theme = outputs.packages.${system}.ariel-sddm-theme;
+      theme = "${import ../../../packages/ariel-sddm-theme/default.nix { inherit pkgs; }}";
       wayland.enable = mkIfElse cfg.wayland true false;
     };
 
