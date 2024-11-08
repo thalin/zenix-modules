@@ -2,15 +2,22 @@
 # your system.  Help is available in the configuration.nix(5) man page
 # and in the NixOS manual (accessible by running ‘nixos-help’).
 
-{ ... }:
-
+{ config, lib, ... }:
+let
+  cfg = config.zen.network.openssh;
+  inherit (lib) mkEnableOption mkIf;
+in
 {
-  # Enable OpenSSH daemon
-  services.openssh.enable = true;
+  options.zen.network.openssh.enable = mkEnableOption "zen config: enable openssh server";
 
-  # Open ssh port in firewall.
-  networking.firewall = {
-    allowedTCPPorts = [ 22 ];
-    allowedUDPPorts = [ 22 ];
+  config = mkIf cfg.enable {
+    # Enable OpenSSH daemon
+    services.openssh.enable = true;
+
+    # Open ssh port in firewall.
+    networking.firewall = {
+      allowedTCPPorts = [ 22 ];
+      allowedUDPPorts = [ 22 ];
+    };
   };
 }
