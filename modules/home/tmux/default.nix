@@ -7,10 +7,10 @@
 }:
 let
   inherit (lib) mkEnableOption mkIf;
-  cfg = config.${namespace}.tmux;
+  cfg = config.zen.tmux;
 in
 {
-  options.${namespace}.tmux.enable = mkEnableOption "zen home config: enable tmux configuration"; 
+  options.zen.tmux.enable = mkEnableOption "zen home config: enable tmux configuration"; 
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [

@@ -7,10 +7,10 @@
 }:
 let
   inherit (lib) mkEnableOption mkIf mkOption types;
-  cfg = config.${namespace}.git;
+  cfg = config.zen.git;
 in
 {
-  options.${namespace}.git = {
+  options.zen.git = {
     enable = mkEnableOption "zen home config: enable git configuration";
     userName = mkOption {
       type = types.str;

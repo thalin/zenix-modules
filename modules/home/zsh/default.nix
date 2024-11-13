@@ -1,16 +1,15 @@
 { 
   lib,
   pkgs,
-  namespace,
   config,
   ...
 }:
 let
   inherit (lib) mkEnableOption mkIf;
-  cfg = config.${namespace}.zsh;
+  cfg = config.zen.zsh;
 in
 {
-  options.${namespace}.zsh.enable = mkEnableOption "zen home config: enable zsh with goodies";
+  options.zen.zsh.enable = mkEnableOption "zen home config: enable zsh with goodies";
 
   config = mkIf cfg.enable {
     # install packages

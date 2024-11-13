@@ -7,10 +7,10 @@
 }:
 let
   inherit (lib) mkEnableOption mkIf;
-  cfg = config.${namespace}.comms;
+  cfg = config.zen.comms;
 in
 {
-  options.${namespace}.comms.enable = mkEnableOption "zen home config: enable extra comms apps";
+  options.zen.comms.enable = mkEnableOption "zen home config: enable extra comms apps";
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
