@@ -10,10 +10,10 @@ in
     xdg_portal = mkEnableOption "zen config: enable XDG Portal for Steam file chooser";
   };
 
-  config = {
+  config = mkIf cfg.enable {
     # This is started out lifted from the wiki:
     # https://nixos.wiki/wiki/Steam
-    programs.steam = mkIf cfg.enable {
+    programs.steam = {
       # docs: https://mynixos.com/nixpkgs/options/programs.steam
       enable = true;
       # https://mynixos.com/nixpkgs/options/programs.steam.remotePlay
