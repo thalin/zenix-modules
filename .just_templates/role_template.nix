@@ -1,11 +1,12 @@
 { lib, config, ... }:
 let
-  inherit (lib) mkIf;
-  role_name = "ROLE_NAME";
-  mkIfRole = mkIf (builtins.elem role_name config.zen.roles);
+  inherit (lib) mkIf mkEnableOption;
+  cfg = config.zen.roles.ROLE_NAME;
 in
 {
-  config = mkIfRole {
+  options.zen.roles.ROLE_NAME.enable = mkEnableOption "zen role: ROLE_NAME";
+
+  config = mkIf cfg.enable {
     zen = lib.mkDefault {
     };
   };

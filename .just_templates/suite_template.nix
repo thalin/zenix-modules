@@ -1,11 +1,12 @@
 { lib, config, ... }:
 let
-  inherit (lib) mkIf;
-  suite_name = "suite_NAME";
-  mkIfsuite = mkIf (builtins.elem suite_name config.zen.suites);
+  inherit (lib) mkIf mkEnableOption;
+  cfg = config.zen.suites.SUITE_NAME;
 in
 {
-  config = mkIfsuite {
+  options.zen.suites.SUITE_NAME.enable = mkEnableOption "zen suite: SUITE_NAME";
+
+  config = mkIf cfg.enable {
     zen = lib.mkDefault {
     };
   };
