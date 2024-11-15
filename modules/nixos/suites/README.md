@@ -1,3 +1,3 @@
 # Suites
 
-Suites are collections of enabled modules which then enable software. [Roles](../roles/README.md) enable several suites at a time.
+Suites are collections of [roles](../roles/README.md), as well as other possible configuration options.

@@ -1,6 +1,5 @@
 { lib, ... }:
 let
-  inherit (lib) mkOption types;
   fileFilter = n: v: lib.strings.hasSuffix ".nix" n &&
                      n != "default.nix" &&
                      v == "regular";
@@ -10,11 +9,4 @@ let
 in
 {
   imports = importFiles;
-
-  options.zen.roles = mkOption {
-    type = types.listOf types.str;
-    default = [];
-    example = [ "workstation" "fun" "laptop" ];
-    description = "zen config: list of roles to enable";
-  };
 }

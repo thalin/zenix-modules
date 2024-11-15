@@ -1,11 +1,11 @@
 { lib, config, ... }:
 let
-  inherit (lib) mkIf;
-  suite_name = "gui-desktop";
-  mkIfsuite = mkIf (builtins.elem suite_name config.zen.suites);
+  inherit (lib) mkIf mkEnableOption;
+  cfg = config.zen.roles.gui-desktop;
 in
 {
-  config = mkIfsuite {
+  options.zen.roles.gui-desktop.enable = mkEnableOption "zen role: gui-desktop";
+  config = mkIf cfg.enable {
     zen = lib.mkDefault {
       system.sound.enable = true;
 
