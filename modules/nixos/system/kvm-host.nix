@@ -11,8 +11,6 @@
   ...
 }:
 let
-  cfg_path = "zen.system.kvm-host";
-  #cfg = config.${cfg_path};
   cfg = config.zen.system.kvm-host;
   inherit (lib) mkEnableOption mkIf;
 in
@@ -25,6 +23,7 @@ in
     programs.virt-manager.enable = true;
     environment.systemPackages = with pkgs; [
       virt-viewer
+      quickemu
     ];
   };
 }

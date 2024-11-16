@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-ROLE_DIR="modules/nixos/roles"
-
 ROLE_NAME=$1
+MOD_TYPE=${2:-nixos}
+
+ROLE_DIR="modules/${MOD_TYPE}/roles"
 
 if [ -f ${ROLE_DIR}/${ROLE_NAME}.nix ]; then
   echo "Role ${ROLE_NAME} already exists."

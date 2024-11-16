@@ -13,8 +13,6 @@ in
         real-system.enable = true;
       };
 
-      comms.enable = true;
-
       network.openssh.enable = true;
     };
   };

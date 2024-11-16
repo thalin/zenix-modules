@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 
-SUITE_DIR="modules/nixos/suites"
-
 SUITE_NAME=$1
+SUITE_TYPE=${2:-nixos}
+
+SUITE_DIR="modules/${SUITE_TYPE}/suites"
 
 if [ -f ${SUITE_DIR}/${SUITE_NAME}.nix ]; then
   echo "suite ${SUITE_NAME} already exists."
