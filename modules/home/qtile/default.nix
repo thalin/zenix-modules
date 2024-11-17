@@ -12,6 +12,7 @@ in
   };
 
   config = mkIf cfg.enable {
+    # TODO: all these files should just be a package so I can configure them more nixishly
     home.file = {
       # Stub to import all the junk my module defines
       ".config/qtile/config.py".source = ./config.py;
