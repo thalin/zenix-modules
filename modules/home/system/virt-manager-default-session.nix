@@ -1,10 +1,14 @@
-{ config, pkgs, ... }:
-
+{ osConfig, lib, ... }:
+let
+  inherit (lib) mkIf;
+in
 {
-  dconf.settings = {
-    "org/virt-manager/virt-manager/connections" = {
-      autoconnect = ["qemu:///system"];
-      uris = ["qemu:///system"];
+  config = mkIf osConfig.zen.system.kvm-host.enable {
+    dconf.settings = {
+      "org/virt-manager/virt-manager/connections" = {
+        autoconnect = ["qemu:///system"];
+        uris = ["qemu:///system"];
+      };
     };
   };
 }
