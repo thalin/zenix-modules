@@ -11,4 +11,4 @@ if [ -f ${SUITE_DIR}/${SUITE_NAME}.nix ]; then
 fi
 
 cp .just_templates/suite_template.nix ${SUITE_DIR}/${SUITE_NAME}.nix
-sed -i -e "s/SUITE_NAME/${SUITE_NAME}/" ${SUITE_DIR}/${SUITE_NAME}.nix
+sed -i -e "s/SUITE_NAME/${SUITE_NAME}/g" ${SUITE_DIR}/${SUITE_NAME}.nix
