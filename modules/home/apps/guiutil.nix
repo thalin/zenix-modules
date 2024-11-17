@@ -1,16 +1,15 @@
 { config, lib, pkgs, ... }:
 let
-  cfg = config.zen.multimedia;
+  cfg = config.zen.apps.guiutil;
   inherit (lib) mkEnableOption mkIf;
 in
 {
-  options.zen.multimedia.enable = mkEnableOption "zen home: multimedia";
+  options.zen.apps.guiutil.enable = mkEnableOption "zen home: gui utility apps";
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
-      vlc
-      smplayer
-      mpv
+      xorg.xdpyinfo
     ];
   };
+
 }
