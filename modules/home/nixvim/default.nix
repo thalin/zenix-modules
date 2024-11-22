@@ -9,14 +9,15 @@ let
   cfg = config.zen.nixvim;
 in
 {
+  imports = [
+    inputs.nixvim.homeManagerModules.nixvim
+    ./keymaps.nix
+    ./plugins
+  ];
+
   options.zen.nixvim.enable = mkEnableOption "zen config: enable nixvim";
 
   config = mkIf cfg.enable {
-    imports = [
-      inputs.nixvim.homeManagerModules.nixvim
-      ./keymaps.nix
-      ./plugins
-    ];
 
     programs.nixvim = {
 

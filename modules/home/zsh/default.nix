@@ -9,7 +9,7 @@ let
   cfg = config.zen.zsh;
 in
 {
-  options.zen.zsh.enable = mkEnableOption "zen home config: enable zsh with goodies";
+  options.zen.zsh.enable = mkEnableOption "zen home config: zsh with goodies";
 
   config = mkIf cfg.enable {
     # install packages

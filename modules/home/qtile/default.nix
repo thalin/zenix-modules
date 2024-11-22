@@ -1,12 +1,13 @@
 { config, osConfig, lib, pkgs, ... }:
 let
-  cfg = config.zen.gui.qtile.enable;
+  cfg = config.zen.gui.qtile;
   inherit (lib) mkOption mkIf types;
 in
 {
   options.zen.gui.qtile.enable = mkOption {
     type = types.bool;
-    default = osConfig.zen.gui.qtile.enable;
+    # default = osConfig.zen.gui.qtile.enable;
+    default = true;
     description = "zen gui home: enable qtile";
     example = true;
   };
