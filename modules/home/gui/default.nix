@@ -1,9 +1,9 @@
 # Set up and theme GUI toolkit elements
 # https://www.youtube.com/watch?v=m_6eqpKrtxk
-{ osConfig, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 let
-  cfg = osConfig.zen.gui;
-  inherit (lib) mkIf;
+  cfg = config.zen.gui;
+  inherit (lib) mkIf mkEnableOption;
   fileFilter = n: v: lib.strings.hasSuffix ".nix" n &&
                      n != "default.nix" &&
                      v == "regular";
@@ -13,6 +13,8 @@ let
 in
 {
   imports = importFiles;
+
+  options.zen.gui.enable = mkEnableOption "zen home: gui";
 
   # Turn on GTK
   config = mkIf cfg.enable {

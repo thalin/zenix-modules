@@ -10,11 +10,11 @@ let
   cfg = config.zen.roles.gui-desktop;
 in
 {
-  # options.zen.roles.gui-desktop.enable = mkEnableOption "zen role: gui desktop";
-  options.zen.roles.gui-desktop.enable = mkOsEnableOption {
-    osOption = osConfig.zen.roles.gui-desktop.enable;
-    description = "zen role: gui-desktops";
-  };
+  options.zen.roles.gui-desktop.enable = mkEnableOption "zen role: gui desktop";
+  # options.zen.roles.gui-desktop.enable = mkOsEnableOption {
+  #   osOption = osConfig.zen.roles.gui-desktop.enable;
+  #   description = "zen role: gui-desktops";
+  # };
 
   config = mkIf cfg.enable {
     zen = lib.mkDefault {
