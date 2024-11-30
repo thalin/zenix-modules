@@ -10,17 +10,17 @@ in
     home.packages = with pkgs; [
       xorg.xdpyinfo
       pciutils
-      usbutils
+      #usbutils
       bat
       silver-searcher
-      psmisc
+      #psmisc
       aria2
       fzf
       p7zip
       age
       ssh-to-age
       sops
-    ];
+    ] ++ lib.optionals (pkgs.stdenv.isLinux) [ usbutils psmisc ];
 
     programs.bat = {
       enable = true;

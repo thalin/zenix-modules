@@ -62,7 +62,7 @@
             enable = true;
           };
         };
-        defaults.file_ignore_patterns = [ "^.git/" ];
+        settings.defaults.file_ignore_patterns = [ "^.git/" ];
       }; # telescope
     }; # plugins
   };

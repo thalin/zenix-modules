@@ -7,7 +7,7 @@ in
   options.zen.gui.qtile.enable = mkOption {
     type = types.bool;
     # default = osConfig.zen.gui.qtile.enable;
-    default = true;
+    default = false;
     description = "zen gui home: enable qtile";
     example = true;
   };
@@ -36,15 +36,23 @@ in
     }; # home.file
 
     home.packages = with pkgs; [
-      networkmanagerapplet # nm-applet
+      #networkmanagerapplet # nm-applet
+      #nitrogen
+      #picom-next
+      #kitty
+      #dconf
+      #xorg.xf86inputsynaptics # syndaemon/synclient
+      #xorg.xkill
+      #xorg.xev
+      #upower # for upower dbus stuff
+    ] ++ lib.optionals (pkgs.stdenv.isLinux) [ 
+      networkmanagerapplet
       nitrogen
-      picom-next
+      picom
       kitty
-      dconf
       xorg.xf86inputsynaptics # syndaemon/synclient
       xorg.xkill
       xorg.xev
-      #upower # for upower dbus stuff
     ];
 
     programs.kitty = {

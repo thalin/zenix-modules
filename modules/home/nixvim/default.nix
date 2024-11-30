@@ -71,5 +71,9 @@ in
       }; # options
 
     }; # programs.nixvim
+
+    home.sessionVariables = {
+      VISUAL="$EDITOR";
+    };
   };
 }
