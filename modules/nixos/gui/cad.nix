@@ -5,11 +5,11 @@
 { config, lib, pkgs, ... }:
 let
   inherit (lib) mkEnableOption mkIf;
-  cfg = config.zen.gui.bambu;
+  cfg = config.zen.gui.cad;
 in {
 
-  options.zen.gui.bambu = {
-    enable = mkEnableOption "zen config: enable modeling stuff for bambu-labs printer";
+  options.zen.gui.cad = {
+    enable = mkEnableOption "zen config: 3dmodeling/cad/3dprinter stuff";
   };
 
   config = mkIf cfg.enable {

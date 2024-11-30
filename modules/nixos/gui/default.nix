@@ -13,7 +13,7 @@ in
     inputs.stylix.nixosModules.stylix
     ./hidpi.nix
     ./stylix.nix
-    ./bambu.nix
+    ./cad.nix
     ./qtile.nix
   ];
 
