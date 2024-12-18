@@ -9,7 +9,7 @@
       airline = {
         enable = true;
         settings = {
-          powerline_fonts = true;
+          powerline_fonts = 1;
         };
       }; # airline
       bufferline.enable = true;
@@ -17,10 +17,11 @@
       treesitter.enable = true;
       ts-autotag.enable = true;
       nix.enable = true;
-      surround.enable = true;
+      vim-surround.enable = true;
       comment.enable = true;
       barbecue.enable = true;
       which-key.enable = true;
+      web-devicons.enable = true;
       lsp = {
         enable = true;
         servers = {

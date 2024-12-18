@@ -72,7 +72,7 @@ in
 
     }; # programs.nixvim
 
-    home.sessionVariables = {
+    home.sessionVariables = lib.mkDefault {
       VISUAL="$EDITOR";
     };
   };

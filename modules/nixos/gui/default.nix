@@ -1,12 +1,12 @@
 # GUI config at the system level.
 
 {
-  inputs, outputs, system, config, pkgs, lib, configLib, ...
+  inputs, outputs, system, config, pkgs, lib, ...
 }: 
 let
   cfg = config.zen.gui;
   inherit (lib) mkEnableOption mkIf;
-  inherit (configLib) mkIfElse;
+  inherit (lib.snowzen) mkIfElse;
 in
 {
   imports = [

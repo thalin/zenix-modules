@@ -1,7 +1,7 @@
 { config, lib, ... }:
 let
   cfg = config.zen.gui.picom;
-  inherit (lib) mkEnableOption mkIf;
+  inherit (lib) mkEnableOption mkIf mkDefault;
 in
 {
   options.zen.gui.picom.enable = mkEnableOption "zen gui: enable picom";
@@ -9,7 +9,7 @@ in
   config = mkIf cfg.enable {
     services.picom = {
       enable = true;
-      backend = "glx";
+      backend = mkDefault "glx";
       settings = {
       };
     };

@@ -35,28 +35,19 @@ in
       ".config/qtile/autostart-wayland.sh".source = ./autostart-wayland.sh;
     }; # home.file
 
-    home.packages = with pkgs; [
-      #networkmanagerapplet # nm-applet
-      #nitrogen
-      #picom-next
-      #kitty
-      #dconf
-      #xorg.xf86inputsynaptics # syndaemon/synclient
-      #xorg.xkill
-      #xorg.xev
-      #upower # for upower dbus stuff
-    ] ++ lib.optionals (pkgs.stdenv.isLinux) [ 
-      networkmanagerapplet
-      nitrogen
-      picom
-      kitty
-      xorg.xf86inputsynaptics # syndaemon/synclient
-      xorg.xkill
-      xorg.xev
+    home.packages = lib.optionals (pkgs.stdenv.isLinux) [ 
+      pkgs.networkmanagerapplet
+      pkgs.nitrogen
+      pkgs.picom
+      pkgs.kitty
+      pkgs.xorg.xf86inputsynaptics # syndaemon/synclient
+      pkgs.xorg.xkill
+      pkgs.xorg.xev
+      pkgs.flameshot
     ];
 
     programs.kitty = {
-      enable = true;
+      enable = pkgs.stdenv.isLinux;
     };
   };
 }

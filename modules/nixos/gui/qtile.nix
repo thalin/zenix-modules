@@ -1,9 +1,9 @@
 {
-  config, configLib, lib, ...
+  config, lib, ...
 }: 
 let
   inherit (lib) mkEnableOption mkIf;
-  inherit (configLib) mkIfElse;
+  inherit (lib.snowzen) mkIfElse;
 
   guicfg = config.zen.gui;
   cfg = guicfg.qtile;
@@ -41,11 +41,12 @@ in
         enable = true;
         extraPackages = py3Pkg: with py3Pkg; [
           (qtile-extras.overridePythonAttrs(old: { disabledTestPaths = [
-            "test/widget/test_strava.py"
-            "test/widget/test_visualiser.py"
-            "test/widget/test_iwd.py"
-            "test/widget/test_upower.py"
-            "test/widget/test_image.py"
+            "test/widget/test_githubnotifications.py"
+            # "test/widget/test_strava.py"
+            # "test/widget/test_visualiser.py"
+            # "test/widget/test_iwd.py"
+            # "test/widget/test_upower.py"
+            # "test/widget/test_image.py"
           ]; })) # qtile-extras override
           screeninfo
         ];

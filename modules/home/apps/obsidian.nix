@@ -1,10 +1,10 @@
 { config, lib, pkgs, ... }:
 let
-  cfg = config.zen.gui.obsidian;
+  cfg = config.zen.apps.obsidian;
   inherit (lib) mkEnableOption mkIf;
 in
 {
-  options.zen.gui.obsidian.enable = mkEnableOption "zen home: gui - obsidian notes";
+  options.zen.apps.obsidian.enable = mkEnableOption "zen home: apps - obsidian notes";
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [

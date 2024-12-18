@@ -1,12 +1,12 @@
-{ lib, osConfig, config, ... }:
+{ lib, pkgs, config, ... }:
 let
   inherit (lib) mkEnableOption mkIf;
-  mkOsEnableOption = {osOption, description}: lib.mkOption {
-    type = lib.types.bool;
-    default = osOption;
-    description = description;
-    example = true;
-  };
+  # mkOsEnableOption = {osOption, description}: lib.mkOption {
+  #   type = lib.types.bool;
+  #   default = osOption;
+  #   description = description;
+  #   example = true;
+  # };
   cfg = config.zen.roles.gui-desktop;
 in
 {
@@ -19,12 +19,15 @@ in
   config = mkIf cfg.enable {
     zen = lib.mkDefault {
       apps = {
-        # guiutil = true;
-        # browsers = true;
-        # guicomms = true;
-        # multimedia = true;
-        # audio = true;
+        guiutil.enable = true;
+        browsers.enable = true;
+        guicomms.enable = true;
+        multimedia.enable = true;
+        audio.enable = true;
+        bitwarden.enable = true;
+        obsidian.enable = true;
       };
+      gui.qtile.enable = pkgs.stdenv.isLinux;
     };
   };
 }

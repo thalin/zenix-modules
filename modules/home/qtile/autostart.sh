@@ -7,6 +7,9 @@
 # Desktop backgrounds
 nitrogen --restore --random
 
+# Screenshot tool
+flameshot &
+
 # Compositor
 #picom -b
 
