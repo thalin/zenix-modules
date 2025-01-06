@@ -9,6 +9,7 @@ in
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
       xorg.xdpyinfo
+      mission-center
     ];
   };
 
