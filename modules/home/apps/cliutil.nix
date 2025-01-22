@@ -20,6 +20,7 @@ in
       age
       ssh-to-age
       sops
+      btop
     ] ++ lib.optionals (pkgs.stdenv.isLinux) [ usbutils psmisc ];
 
     programs.bat = {
