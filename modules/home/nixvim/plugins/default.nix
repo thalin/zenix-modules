@@ -22,6 +22,8 @@
       barbecue.enable = true;
       which-key.enable = true;
       web-devicons.enable = true;
+      luasnip.enable = true;
+      friendly-snippets.enable = true;
       lsp = {
         enable = true;
         servers = {
@@ -56,6 +58,9 @@
       cmp-nvim-lsp.enable = true;
       cmp-buffer.enable = true;
       cmp-path.enable = true;
+      cmp-cmdline.enable = true;
+      cmp-cmdline-history.enable = true;
+
       telescope = {
         enable = true;
         extensions = {
@@ -65,6 +70,13 @@
         };
         settings.defaults.file_ignore_patterns = [ "^.git/" ];
       }; # telescope
+      trouble = {
+        enable = true;
+        settings = {
+          auto_close = true;
+          auto_refresh = true;
+        };
+      };
     }; # plugins
   };
 }

@@ -16,6 +16,8 @@ in
   programs.nixvim.keymaps = [
     # Open up telescope for key mappings
     (kmap "" "<leader>tk" "<cmd>Telescope keymaps<cr>" "telescope: show keymaps")
+    (kmap "" "<leader>tf" "<cmd>Telescope find_files<cr>" "telescope: find files")
+    (kmap "" "<leader>tg" "<cmd>Telescope live_grep<cr>" "telescope: live grep")
 
     # Split navigation
     (kmap "n" "<C-h>" "<C-w>h" "panes: move left")
@@ -43,5 +45,9 @@ in
     # Move text around in visual mode
     (kmap "v" "<A-j>" ":m .-2<CR>==" "visual: move highlighted text up a line")
     (kmap "v" "<A-k>" ":m .+2<CR>==" "visual: move highlighted text down a line")
+
+    # Trouble commands
+    (kmap "n" "<leader>td" "<cmd>Trouble diagnostics toggle<cr>"     "Trouble: toggle diagnostics panel")
+    (kmap "n" "<leader>ts" "<cmd>Trouble symbols toggle focus=false" "Trouble: toggle symbols panel")
   ];
 }
