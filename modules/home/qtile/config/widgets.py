@@ -31,14 +31,15 @@ powerline_right = {
 }
 
 # Widget factory, top
-def widget_factory_top(i, total_screens):
+def widget_factory_top(main=False):
   widgets = [
     widget.CurrentLayoutIcon(padding=10, background=theme["faded_purple"], foreground=theme["light0"], **powerline_left),
     widget.WindowName(width=700, scroll=True, background=theme["faded_blue"], foreground=theme["light0"], **powerline_left),
     widget.Spacer(background=theme["dark0_95"], **powerline_right),
   ];
   # Add some widgets to last screen
-  if i == total_screens - 1:
+  # if i == total_screens - 1:
+  if main:
     widgets.extend([
       widget.Systray(icon_size=systray_icon_size, background=theme["dark1"]),
       widget.Spacer(length=10, background=theme["dark1"], **powerline_right),
@@ -52,7 +53,11 @@ def widget_factory_top(i, total_screens):
   return widgets
 
 # Widget factory, bottom
-def widget_factory_bottom(i, total_screens):
+def widget_factory_bottom(main=False):
+  """Populate some widgets.
+
+  Supports 1 or 3 screens. On only one screen and the middle screen for 3 screens,
+  add some additional widgets."""
   widgets = [
     widget.GroupBox(padding=10,
                     spacing=5,
@@ -71,7 +76,8 @@ def widget_factory_bottom(i, total_screens):
                   **powerline_left),
     widget.Spacer(**powerline_right),
   ]
-  if i == total_screens - 1:
+  # if i == total_screens - 1:
+  if main:
     widgets.extend([
       widget.Clock(background=theme['faded_blue'],
                    foreground=theme['light0'],
