@@ -48,6 +48,7 @@ in
           "module_overrides"
           "p10k"
           "kitty"
+          "nixos"
         ];
         pmoduleDirs = [ "${config.home.homeDirectory}/.config/zsh/prezto_modules/" ];
         editor.keymap = "vi";
