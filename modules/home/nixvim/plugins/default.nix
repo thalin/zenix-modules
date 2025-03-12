@@ -24,6 +24,20 @@
       web-devicons.enable = true;
       luasnip.enable = true;
       friendly-snippets.enable = true;
+      committia.enable = true;
+      coq-nvim.enable = true;
+      ollama.enable = true;
+      # avante = {
+      #   enable = true;
+      #   settings = {
+      #     provider = "ollama";
+      #     ollama = {
+      #       endpoint = "http://127.0.0.1:11434/v1";
+      #       model = "codegemma";
+      #       disable_tools = true;
+      #     };
+      #   };
+      # };
       lsp = {
         enable = true;
         servers = {
