@@ -6,14 +6,4 @@ let
 in
 {
   imports = importDirs;
-  # imports = [
-  #   ../common
-  #   ../gui
-  #   ../games
-  #   ../hardware
-  #   ../network
-  #   ../system
-  #   ../roles
-  #   # ../suites
-  # ];
 }
