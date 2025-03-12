@@ -12,5 +12,9 @@ in
       spotifyd
       spotify
     ];
+    services.mpd = {
+      enable = true;
+      musicDirectory = "~/Music";
+    };
   };
 }
