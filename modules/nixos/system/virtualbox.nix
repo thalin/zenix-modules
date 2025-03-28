@@ -21,7 +21,6 @@ in
   config = mkIf cfg.enable {
     virtualisation.virtualbox.host = {
       enable = true;
-      enableKvm = true;
     };
   };
 }

@@ -1,11 +1,12 @@
-{ ... }:
+{ lib, ... }:
+let
+  fileFilter = n: v: lib.strings.hasSuffix ".nix" n &&
+                     n != "default.nix" &&
+                     v == "regular";
+  fileList = builtins.readDir ./.;
+  validFiles = lib.attrsets.filterAttrs fileFilter fileList;
+  importFiles = lib.attrsets.mapAttrsToList (n: v: ./${n}) validFiles;
+in
 {
-  imports = [
-    ./appimage.nix
-    ./kvm-host.nix
-    ./proxmox-guest.nix
-    ./zfs.nix
-    ./sound.nix
-    ./touchpad.nix
-  ];
+  imports = importFiles;
 }

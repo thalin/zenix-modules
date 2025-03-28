@@ -16,7 +16,7 @@ in
   options.zen.system.podman.enable = mkEnableOption "zen config: enable podman support";
 
   config = mkIf cfg.enable {
-    virtualization = {
+    virtualisation = {
       containers.enable = true;
       podman = {
         enable = true;
