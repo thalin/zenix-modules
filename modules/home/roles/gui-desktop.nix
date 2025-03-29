@@ -21,11 +21,9 @@ in
       apps = {
         guiutil.enable = true;
         browsers.enable = true;
-        guicomms.enable = true;
         multimedia.enable = true;
         audio.enable = true;
         bitwarden.enable = true;
-        obsidian.enable = true;
       };
       gui.qtile.enable = pkgs.stdenv.isLinux;
     };

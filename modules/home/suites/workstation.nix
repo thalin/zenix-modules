@@ -12,6 +12,10 @@ in
         gui-desktop.enable = true;
         cli.enable = true;
       };
+      apps = {
+        guicomms.enable = true;
+        obsidian.enable = true;
+      };
     };
   };
 }

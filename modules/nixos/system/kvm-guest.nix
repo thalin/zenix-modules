@@ -4,11 +4,11 @@
 
 { config, lib, ... }:
 let
-  cfg = config.zen.system.proxmox-guest;
+  cfg = config.zen.system.kvm-guest;
   inherit (lib) mkEnableOption mkIf;
 in
 {
-  options.zen.system.proxmox-guest.enable = mkEnableOption "zen config: enable proxmox guest config";
+  options.zen.system.kvm-guest.enable = mkEnableOption "zen config: enable kvm guest config";
 
   config = mkIf cfg.enable {
     # Enable QEMU Guest Agent
