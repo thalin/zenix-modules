@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (lib) mkPackageOption mkEnableOption mkIf;
+  inherit (lib) mkPackageOption mkEnableOption mkOption mkIf types;
   cfg = config.zen.nixvim.plugins;
 in
 {
@@ -17,6 +17,18 @@ in
     avante = {
       enable = mkEnableOption "zen config: enable avante plugin for nixvim";
       package = mkPackageOption pkgs.vimPlugins "avante-nvim" { };
+      ollama = {
+        endpoint = mkOption {
+          default = "http://127.0.0.1:11434/v1";
+          type = types.str;
+          description = "Override ollama endpoint";
+        };
+        model = mkOption {
+          default = "codegemma";
+          type = types.str;
+          description = "Override ollama model";
+        };
+      };
     };
   };
 
@@ -56,8 +68,8 @@ in
               ollama = {
                 __inherited_from = "openai";
                 api_key_name = "";
-                endpoint = "http://127.0.0.1:11434/v1";
-                model = "codellama";
+                endpoint = cfg.avante.ollama.endpoint;
+                model = cfg.avante.ollama.model;
                 disable_tools = true;
               };
             };
