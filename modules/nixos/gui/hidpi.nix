@@ -17,27 +17,32 @@ in {
     };
     scale_up = mkOption {
       # should be >= 1.0 usually
-      type = types.str;
-      default = "1.0";
+      type = types.float;
+      default = 1.0;
     };
     scale_down = mkOption {
       # should be <= 1.0 usually
-      type = types.str;
-      default = "1.0";
+      type = types.float;
+      default = 1.0;
     };
   };
 
-  config = mkIf cfg.enable {
-    environment.variables = {
-      GDK_SCALE = cfg.scale_up;
-      GDK_DPI_SCALE = cfg.scale_down;
-      _JAVA_OPTIONS = "-Dsun.java2d.uiScale=${cfg.scale_down}";
-    };
+  config = mkIf cfg.enable (
+    let
+      scale_up = builtins.toString cfg.scale_up;
+      scale_down = builtins.toString cfg.scale_down;
+    in {
+      environment.variables = {
+        GDK_SCALE = scale_up;
+        GDK_DPI_SCALE = scale_down;
+        _JAVA_OPTIONS = "-Dsun.java2d.uiScale=${scale_down}";
+      };
 
-    services.displayManager.sddm.enableHidpi = mkDefault true;
+      services.displayManager.sddm.enableHidpi = mkDefault true;
 
-    services.xserver.dpi = mkDefault cfg.dpi;
+      services.xserver.dpi = mkDefault cfg.dpi;
 
-    services.xserver.upscaleDefaultCursor = mkDefault true;
-  };
+      services.xserver.upscaleDefaultCursor = mkDefault true;
+    }
+  );
 }

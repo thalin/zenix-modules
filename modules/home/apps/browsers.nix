@@ -9,7 +9,6 @@ in
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
       librewolf
-      brave
       google-chrome
     ];
   };
