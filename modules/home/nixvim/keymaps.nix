@@ -48,6 +48,6 @@ in
 
     # Trouble commands
     (kmap "n" "<leader>td" "<cmd>Trouble diagnostics toggle<cr>"     "Trouble: toggle diagnostics panel")
-    (kmap "n" "<leader>ts" "<cmd>Trouble symbols toggle focus=false" "Trouble: toggle symbols panel")
+    (kmap "n" "<leader>ts" "<cmd>Trouble symbols toggle focus=false<cr>" "Trouble: toggle symbols panel")
   ];
 }
