@@ -55,6 +55,9 @@ in
             upstream = "green";
             plain = "blue";
           };
+          "diff" = {
+            meta = "blue";
+          };
         };
         diff = {
           context = 3;
