@@ -10,12 +10,12 @@ in
       enable = true;
       controlMaster = "yes";
       controlPersist = "5m";
-    };
-    matchBlocks = {
-      # just an example for github
-      "gh" = {
-        hostname = "github.com";
-        user = "git";
+      matchBlocks = {
+        # just an example for github
+        "gh" = {
+          hostname = "github.com";
+          user = "git";
+        };
       };
     };
     services.ssh-agent.enable = true;
