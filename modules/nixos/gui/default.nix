@@ -1,21 +1,22 @@
 # GUI config at the system level.
 
 {
-  inputs, outputs, system, config, pkgs, lib, ...
+  config, pkgs, lib, ...
 }: 
 let
   cfg = config.zen.gui;
   inherit (lib) mkEnableOption mkIf;
   inherit (lib.snowzen) mkIfElse;
+
+  fileFilter = n: v: lib.strings.hasSuffix ".nix" n &&
+                     n != "default.nix" &&
+                     v == "regular";
+  fileList = builtins.readDir ./.;
+  validFiles = lib.attrsets.filterAttrs fileFilter fileList;
+  importFiles = lib.attrsets.mapAttrsToList (n: v: ./${n}) validFiles;
 in
 {
-  imports = [
-    inputs.stylix.nixosModules.stylix
-    ./hidpi.nix
-    ./stylix.nix
-    ./cad.nix
-    ./qtile.nix
-  ];
+  imports = importFiles;
 
   options.zen.gui = {
     enable = mkEnableOption "zen config: enable system-level gui";
