@@ -1,18 +1,22 @@
 { lib, config, ... }:
 let
-  inherit (lib) mkIf mkEnableOption;
+  inherit (lib) mkIf mkEnableOption mkDefault;
   cfg = config.zen.roles.cli;
 in
 {
   options.zen.roles.cli.enable = mkEnableOption "zen role: cli";
 
   config = mkIf cfg.enable {
-    zen = lib.mkDefault {
-      git.enable = true;
-      zsh.enable = true;
-      nixvim.enable = true;
-      tmux.enable = true;
-      apps.cliutil.enable = true;
+    zen = {
+      system.ssh.enable = mkDefault true;
+      git.enable = mkDefault true;
+      zsh.enable = mkDefault true;
+      nixvim = {
+        enable = mkDefault true;
+        plugins.avante.enable = mkDefault false;
+      };
+      tmux.enable = mkDefault true;
+      apps.cliutil.enable = mkDefault true;
     };
   };
 }
