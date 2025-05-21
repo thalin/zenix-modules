@@ -8,8 +8,6 @@ in
   config = mkIf cfg.enable {
     programs.ssh = {
       enable = true;
-      controlMaster = "yes";
-      controlPersist = "5m";
       matchBlocks = {
         # just an example for github
         "gh" = {
