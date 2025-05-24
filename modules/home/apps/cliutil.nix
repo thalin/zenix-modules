@@ -10,28 +10,49 @@ in
     home.packages = with pkgs; [
       pciutils
       #usbutils
-      bat
       silver-searcher
       #psmisc
-      aria2
       fzf
       p7zip
       age
       ssh-to-age
       sops
-      btop
+      xh
+      du-dust
+      dua
+      tokei
+      mask
+      just
     ] ++ lib.optionals (pkgs.stdenv.isLinux) [ usbutils psmisc ];
 
-    programs.bat = {
-      enable = true;
-      # 8/27/2024 - removed batdiff from extraPackages because it failed a test
-      # after switching to nixpkgs-unstable
-      extraPackages = with pkgs.bat-extras; [ batman batgrep batwatch ];
-    }; # programs.bat
+    programs = {
+      bat = {
+        enable = true;
+        # 8/27/2024 - removed batdiff from extraPackages because it failed a test
+        # after switching to nixpkgs-unstable
+        extraPackages = with pkgs.bat-extras; [ batman batgrep batwatch ];
+      }; # programs.bat
 
-    programs.zsh.shellAliases = {
-      cat = "bat";
-    }; # programs.zsh.shellAliases
+      zellij = {
+        enable = true;
+        enableZshIntegration = true;
+      };
+
+      yazi = {
+        enable = true;
+        enableZshIntegration = true;
+      };
+
+      ncspot.enable = true;
+      ripgrep.enable = true;
+      fd.enable = true;
+      btop.enable = true;
+      aria2.enable = true;
+
+      zsh.shellAliases = {
+        cat = "bat";
+      }; # programs.zsh.shellAliases
+    };
   };
 
 }
