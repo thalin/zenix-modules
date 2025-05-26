@@ -35,7 +35,8 @@ in
 
       zellij = {
         enable = true;
-        enableZshIntegration = true;
+        # I don't like it running all the time.
+        # enableZshIntegration = true;
       };
 
       yazi = {
