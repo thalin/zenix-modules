@@ -12,7 +12,7 @@ in
   config = lib.mkIf cfg.enable {
     # Enable sound with pipewire.
     # sound.enable = true;
-    hardware.pulseaudio.enable = false;
+    services.pulseaudio.enable = false;
     security.rtkit.enable = true;
     services.pipewire = {
       enable = true;
@@ -26,8 +26,8 @@ in
       # no need to redefine it in your config for now)
       #media-session.enable = true;
     };
-    environment.systemPackages = with pkgs; [
-      pulseaudio
-    ]; 
+    # environment.systemPackages = with pkgs; [
+    #   pulseaudio
+    # ]; 
   };
 } 
