@@ -3,7 +3,6 @@
   environment.systemPackages = with pkgs; [
     vim # my favored editor - I mean, maybe this should be neovim
     wget # get stuff from websites
-    zsh # a shell
     mtr # traceroute
     unzip # unzip shit
   ];
