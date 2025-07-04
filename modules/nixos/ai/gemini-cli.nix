@@ -9,7 +9,7 @@ let
   inherit (lib) mkEnableOption mkIf;
 in
 {
-  options.zen.ai.ollama.enable = mkEnableOption "zen config: enable gemini-cli";
+  options.zen.ai.gemini-cli.enable = mkEnableOption "zen config: enable gemini-cli";
   
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [ gemini-cli ];
