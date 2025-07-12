@@ -99,6 +99,11 @@ in
           "git@github.com:".insteadOf = "gh:";
           "git@github.com:thalin/".insteadOf = "gt:";
         };
+        gpg = {
+          "ssh" = {
+            allowedSignersFile = "~/.config/git/allowed_signers";
+          };
+        };
       };
       diff-so-fancy = {
         enable = true;
