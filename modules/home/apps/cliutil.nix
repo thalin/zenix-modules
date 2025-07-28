@@ -44,7 +44,10 @@ in
         enableZshIntegration = true;
       };
 
-      ncspot.enable = true;
+      ncspot = {
+        enable = true;
+        use_nerdfont = true;
+      };
       ripgrep.enable = true;
       fd.enable = true;
       btop.enable = true;
