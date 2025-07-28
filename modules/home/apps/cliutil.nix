@@ -46,7 +46,9 @@ in
 
       ncspot = {
         enable = true;
-        use_nerdfont = true;
+        settings = {
+          use_nerdfont = true;
+        };
       };
       ripgrep.enable = true;
       fd.enable = true;
