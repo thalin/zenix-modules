@@ -14,7 +14,9 @@ in {
 
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [
-      bambu-studio
+      # Bambu studio is broken right now. See:
+      # https://github.com/NixOS/nixpkgs/issues/391622
+      # bambu-studio
       orca-slicer
       freecad
       openscad
