@@ -21,3 +21,11 @@ new-darwin-role role:
 new-darwin-suite suite:
   @echo 'Making new darwin suite: {{suite}}...'
   {{justfile_directory()}}/.just_templates/make_suite.sh {{suite}} darwin
+
+new-home-module module_name:
+  @echo 'Making new home module: {{module_name}}...'
+  nix run .\#make_zenix_module home {{module_name}}
+
+new-nixos-module module_name:
+  @echo 'Making new nixos module: {{module_name}}...'
+  nix run .\#make_zenix_module nixos {{module_name}}
