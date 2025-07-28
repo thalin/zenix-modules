@@ -64,7 +64,7 @@ in
             # As a result, we have to do this hacky thing:
             # https://github.com/yetone/avante.nvim/wiki/Custom-providers#ollama
             provider = "ollama";
-            vendors = {
+            providers = {
               ollama = {
                 __inherited_from = "openai";
                 api_key_name = "";
