@@ -24,6 +24,7 @@ in
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
       git
+      gh # Github CLI
     ];
     programs.git = {
       enable = true;
