@@ -1,6 +1,6 @@
 { config, lib, ... }:
 let
-  inherit (lib) mkIf mkEnableOption;
+  inherit (lib) mkIf mkEnableOption mkDefault;
   cfg = config.zen.system.ssh;
 in
 {
@@ -16,7 +16,7 @@ in
         };
       };
     };
-    services.ssh-agent.enable = true;
+    services.ssh-agent.enable = mkDefault true;
     programs.zsh.prezto.ssh.identities = [
       "id_ed25519" # use good keys please
     ];
