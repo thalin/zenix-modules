@@ -13,7 +13,7 @@ in
   options.zen.nixvim.enable = mkEnableOption "zen config: enable nixvim";
 
   imports = [
-    inputs.nixvim.homeManagerModules.nixvim
+    inputs.nixvim.homeModules.nixvim
     ./keymaps.nix
     ./options.nix
     ./plugins

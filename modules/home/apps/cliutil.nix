@@ -18,7 +18,7 @@ in
       ssh-to-age
       sops
       xh
-      du-dust
+      dust
       dua
       tokei
       mask
