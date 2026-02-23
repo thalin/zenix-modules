@@ -19,6 +19,7 @@ in
   
   config = mkIf cfg.enable {
     environment.systemPackages = with pkgs; [ ollama-rocm ];
+    nixpkgs.config.allowUnfree = true;
     services = {
       ollama = {
         enable = true;
