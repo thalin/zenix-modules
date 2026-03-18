@@ -1,7 +1,7 @@
 # See also: https://github.com/NixOS/nixpkgs/issues/391622
 # Maybe someday I can remove this and go back to using the
 # upstream package.
-{ pkgs, ... }:
+{ pkgs, config, lib, ... }:
 let
   version = "2.1.1";
   appimageName = "Bambu_Studio_ubuntu-24.04_PR-7292.AppImage";
@@ -41,18 +41,24 @@ let
       hack-font
     ];
   };
+  cfg = config.zen.apps.bambustudio;
+  inherit (lib) mkEnableOption mkIf;
 in
 {
-  home.packages = [ bambu-studio ];
-  home.file.".local/share/applications/bambustudio.desktop".text = ''
-    [Desktop Entry]
-    Name=BambuStudio
-    GenericName=3D Printing Software
-    Icon=BambuStudio
-    Terminal=false
-    Type=Application
-    MimeType=model/stl;model/3mf;application/vnd.ms-3mfdocument;application/prs.wavefront-obj;application/x-amf;x-scheme-handler/bambustudio;
-    Categories=Graphics;3DGraphics;Engineering;
-    StartupNotify=false
-  '';
+  options.zen.apps.bambustudio.enable = mkEnableOption "zen home: bambustudio apps";
+
+  config = mkIf cfg.enable {
+    home.packages = [ bambu-studio ];
+    home.file.".local/share/applications/bambustudio.desktop".text = ''
+      [Desktop Entry]
+      Name=BambuStudio
+      GenericName=3D Printing Software
+      Icon=BambuStudio
+      Terminal=false
+      Type=Application
+      MimeType=model/stl;model/3mf;application/vnd.ms-3mfdocument;application/prs.wavefront-obj;application/x-amf;x-scheme-handler/bambustudio;
+      Categories=Graphics;3DGraphics;Engineering;
+      StartupNotify=false
+    '';
+  };
 }

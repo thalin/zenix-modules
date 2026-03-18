@@ -1,4 +1,4 @@
-{ config, lib, ... }:
+{ config, lib, pkgs, ... }:
 let
   cfg = config.zen.system.kvm-guest;
   inherit (lib) mkEnableOption mkIf;
@@ -15,5 +15,9 @@ in
     services.spice-autorandr.enable = true;
     # https://search.nixos.org/options?channel=24.05&show=services.spice-vdagentd.enable&from=0&size=50&sort=relevance&type=packages&query=spice-vdagentd
     services.spice-vdagentd.enable = true;
+
+    environment.systemPackages = with pkgs; [
+      cloud-utils
+    ];
   };
 }
