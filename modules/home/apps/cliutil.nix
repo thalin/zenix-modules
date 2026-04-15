@@ -4,7 +4,10 @@ let
   inherit (lib) mkEnableOption mkIf;
 in
 {
-  options.zen.apps.cliutil.enable = mkEnableOption "zen home: cli utility apps";
+  options.zen.apps.cliutil = {
+    enable = mkEnableOption "zen home: cli utility apps";
+    yazi = mkEnableOption "zen home: Enable yazi (warning: heavy >1gb deps)";
+  };
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
@@ -39,7 +42,7 @@ in
         # enableZshIntegration = true;
       };
 
-      yazi = {
+      yazi = mkIf cfg.yazi {
         enable = true;
         enableZshIntegration = true;
       };
