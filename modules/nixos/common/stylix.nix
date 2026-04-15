@@ -5,11 +5,6 @@
   stylix = {
     enable = true;
     base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
-    cursor = {
-      package = pkgs.bibata-cursors;
-      name = "Bibata-Modern-Ice";
-      size = 32;
-    };
     fonts = {
       monospace = {
         package = pkgs.nerd-fonts.fira-code;
