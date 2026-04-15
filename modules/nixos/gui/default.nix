@@ -46,6 +46,14 @@ in
       wayland.enable = mkIfElse cfg.wayland true false;
     };
 
+    stylix = {
+      cursor = {
+        package = pkgs.bibata-cursors;
+        name = "Bibata-Modern-Ice";
+        size = 32;
+      };
+    };
+
     environment.systemPackages = [
       # These qt5 packages allow the sddm theme to work.
       pkgs.libsForQt5.qt5.qtmultimedia
