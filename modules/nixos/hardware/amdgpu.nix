@@ -15,6 +15,7 @@ in
     environment.systemPackages = with pkgs; [
       lact
       amdgpu_top
+      btop-rocm
     ];
 
     services.lact.enable = true;
