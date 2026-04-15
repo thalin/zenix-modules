@@ -14,6 +14,7 @@ in
       nixvim = {
         enable = mkDefault true;
         plugins.avante.enable = mkDefault false;
+        plugins.light = mkDefault true;
       };
       tmux.enable = mkDefault true;
       apps.cliutil.enable = mkDefault true;
