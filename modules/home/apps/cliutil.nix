@@ -26,6 +26,8 @@ in
       tokei
       mask
       just
+      comma
+      nix-index
     ] ++ lib.optionals (pkgs.stdenv.isLinux) [ usbutils psmisc ];
 
     programs = {
