@@ -39,14 +39,15 @@ try:
     # this host_vars.py should be populated by home-manager, sourced from
     # nixos-config/thalin/hosts/<hostname>/host_vars.py
     from .host_vars import options as host_options
+
     logger.info("Imported host_vars.options")
 except ImportError:
     logger.info("Unable to import host_vars.options")
 
 options = {
-        "term": "kitty",
-        "bar_height": 4*16,
-        }
+    "term": "kitty",
+    "bar_height": 4 * 16,
+}
 
 if host_options is not None:
     options.update(host_options)

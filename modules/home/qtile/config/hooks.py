@@ -3,12 +3,12 @@ import subprocess
 
 from libqtile import hook
 
-#from libqtile.log_utils import logger
+# from libqtile.log_utils import logger
 from .logging import logger
 
-logger.info('Registering Qtile hooks')
+logger.info("Registering Qtile hooks")
 
-#def detect_screens(qtile):
+# def detect_screens(qtile):
 #  """
 #  Detect if a new screen is plugged and reconfigure/restart qtile
 #  """
@@ -41,29 +41,32 @@ logger.info('Registering Qtile hooks')
 #  observer = pyudev.MonitorObserver(monitor, setup_monitors)
 #  observer.start()
 
-#@hook.subscribe.client_new
-#def new_client(client):
+# @hook.subscribe.client_new
+# def new_client(client):
 #  if client.window.get_wm_class()[0] == "screenkey":
 #    client.static(0)
 
+
 @hook.subscribe.screen_change
 def restart_on_randr(ev):
-  pass
-  # logger.info("restart_on_randr event attributes: {}".format(dir(ev)))
-  # logger.info(f"""Other attributes:
-  #             bufsize: {ev.bufsize}, config_timestamp: {ev.config_timestamp}
-  #             width: {ev.width}, height: {ev.height}
-  #             mwidth: {ev.mwidth}, mheight: {ev.mheight}
-  #             pack: {ev.pack}, request_window: {ev.request_window}
-  #             response_type: {ev.response_type}, root: {ev.root}
-  #             rotation: {ev.rotation}, sequence: {ev.sequence}
-  #             sizeID: {ev.sizeID}, subpixel_order: {ev.subpixel_order}
-  #             synthetic: {ev.synthetic}, timestamp: {ev.timestamp}
-  #             unpacker: {ev.unpacker}, xge: {ev.xge}""")
+    pass
+    # logger.info("restart_on_randr event attributes: {}".format(dir(ev)))
+    # logger.info(f"""Other attributes:
+    #             bufsize: {ev.bufsize}, config_timestamp: {ev.config_timestamp}
+    #             width: {ev.width}, height: {ev.height}
+    #             mwidth: {ev.mwidth}, mheight: {ev.mheight}
+    #             pack: {ev.pack}, request_window: {ev.request_window}
+    #             response_type: {ev.response_type}, root: {ev.root}
+    #             rotation: {ev.rotation}, sequence: {ev.sequence}
+    #             sizeID: {ev.sizeID}, subpixel_order: {ev.subpixel_order}
+    #             synthetic: {ev.synthetic}, timestamp: {ev.timestamp}
+    #             unpacker: {ev.unpacker}, xge: {ev.xge}""")
+
+
 #  qtile.cmd_restart()
 
 # @hook.subscribe.startup_once
 # def autostart():
 #   logger.info("startup_once event: starting autostart applications")
 #   script = os.path.expanduser("~/.config/qtile/autostart.sh")
-  #subprocess.run([script])
+# subprocess.run([script])
