@@ -14,7 +14,7 @@ bar_height:
     description: sets the bar height for top and bottom qtile bars
 fake_screens:
     type: dictionary
-    default: undefined
+    default: {}
     description: fake screen options, see below
     sub options:
         widths:
@@ -33,6 +33,14 @@ systray_icon_size:
     type: integer
     default: 36
     description: size of systray icons
+upower_widget_enable:
+    type: bool
+    default: false
+    description: should the main top bar include the qtile-extended upower widget
+battery:
+    type: bool
+    default: false
+    description: should the main top bar include qtile battery widget
 """
 
 try:
@@ -44,9 +52,15 @@ try:
 except ImportError:
     logger.info("Unable to import host_vars.options")
 
+# Options with defaults
 options = {
     "term": "kitty",
     "bar_height": 4 * 16,
+    "fake_screens": {},
+    "widget_font_size": 24,
+    "systray_icon_size": 36,
+    "upower_widget_enable": False,
+    "battery": False,
 }
 
 if host_options is not None:

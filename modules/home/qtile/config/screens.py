@@ -41,7 +41,7 @@ def make_screens(widths, height, main_screen, bar_size):
     return screens
 
 
-if "fake_screens" in options:
+if options["fake_screens"]:
     logger.info("Making fake screens")
     fs_opts = options["fake_screens"]
     fake_screens = make_screens(

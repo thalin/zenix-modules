@@ -49,8 +49,7 @@ def widget_factory_top(main=False):
         ),
         widget.Spacer(background=theme["dark0_95"], **powerline_right),
     ]
-    # Add some widgets to last screen
-    # if i == total_screens - 1:
+    # Add some widgets to main screen
     if main:
         widgets.extend(
             [
@@ -111,7 +110,7 @@ def widget_factory_bottom(main=False):
         ),
         widget.Spacer(**powerline_right),
     ]
-    # if i == total_screens - 1:
+    # Add some widgets to main screen
     if main:
         widgets.extend(
             [

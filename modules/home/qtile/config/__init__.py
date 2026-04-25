@@ -7,7 +7,7 @@ from .hooks import *
 
 from .widgets import widget_defaults, extension_defaults
 
-if "fake_screens" in options:
+if options["fake_screens"]:
     from .screens import fake_screens
 else:
     from .screens import screens
