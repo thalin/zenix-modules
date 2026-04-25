@@ -75,8 +75,8 @@ def widget_factory_top(main=False):
             widgets.extend(
                 [
                     widget.BatteryIcon(background=theme["neutral_purple"]),
-                    widget.Spacer(background=theme["neutral_purple"]),
                     widget.Battery(background=theme["neutral_purple"]),
+                    widget.Spacer(length=10, background=theme["neutral_purple"]),
                 ]
             )
     return widgets
