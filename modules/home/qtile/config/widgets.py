@@ -67,6 +67,7 @@ def widget_factory_top(main=False):
         if options.get("upower_widget_enable", False):
             widgets.extend(
                 [
+                    widget.Spacer(length=10, background=theme["faded_blue"], **powerline_right),
                     widget.UPowerWidget(background=theme["neutral_purple"]),
                     widget.Spacer(length=10, background=theme["neutral_purple"]),
                 ]
@@ -74,6 +75,7 @@ def widget_factory_top(main=False):
         if options.get("battery", False):
             widgets.extend(
                 [
+                    widget.Spacer(length=10, background=theme["faded_blue"], **powerline_right),
                     widget.BatteryIcon(background=theme["neutral_purple"]),
                     widget.Battery(background=theme["neutral_purple"]),
                     widget.Spacer(length=10, background=theme["neutral_purple"]),
