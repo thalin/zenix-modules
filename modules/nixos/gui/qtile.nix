@@ -1,5 +1,5 @@
 {
-  config, lib, ...
+  config, lib, pkgs, ...
 }: 
 let
   inherit (lib) mkEnableOption mkIf;
@@ -39,6 +39,10 @@ in
     services.xserver = mkIfElse (nixcfg.release == "24.04") {
       windowManager.qtile = {
         enable = true;
+        package = pkgs.python3Packages.qtile.overrideAttrs (old: {
+          doCheck = false;
+          doInstallCheck = false;
+        });
         extraPackages = py3Pkg: with py3Pkg; [
           (qtile-extras.overridePythonAttrs(old: { disabledTestPaths = [
             "test/widget/test_githubnotifications.py"
@@ -68,6 +72,10 @@ in
     } { # the else branch of the mkIfElse for services.xserver
       windowManager.qtile = {
         enable = true;
+        package = pkgs.python3Packages.qtile.overrideAttrs (old: {
+          doCheck = false;
+          doInstallCheck = false;
+        });
         extraPackages = py3Pkg: with py3Pkg; [
           qtile-extras
           screeninfo
