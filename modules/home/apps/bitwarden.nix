@@ -8,7 +8,9 @@ in
 
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
-      bitwarden-desktop
+      #5-30-2026 - currently using insecure electron version.
+      # Also I don't really use this. Maybe I should just nuke it.
+      #bitwarden-desktop
       bitwarden-cli
     ];
   };
