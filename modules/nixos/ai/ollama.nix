@@ -21,11 +21,11 @@ in
     services = {
       ollama = {
         enable = true;
-        acceleration = "rocm";
         rocmOverrideGfx = "11.0.1";
         host = cfg.host;
         port = 11434;
         openFirewall = true;
+        package = pkgs.ollama-rocm;
       };
       open-webui = {
         enable = true;
