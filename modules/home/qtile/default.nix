@@ -40,9 +40,9 @@ in
       pkgs.nitrogen
       pkgs.picom
       pkgs.kitty
-      pkgs.xorg.xf86inputsynaptics # syndaemon/synclient
-      pkgs.xorg.xkill
-      pkgs.xorg.xev
+      pkgs.xf86inputsynaptics # syndaemon/synclient
+      pkgs.xkill
+      pkgs.xev
       pkgs.flameshot
     ];
 
