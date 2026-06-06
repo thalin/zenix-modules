@@ -34,8 +34,10 @@ in
             name = cfg.userName;
             email = cfg.userEmail;
           };
-          aliases = {
+          alias = {
             it = "!git init . && git commit --allow-empty -m 'First commit'";
+            cai = "!f() { if git diff --cached --quiet; then echo 'No staged changes to commit.'; return 1; fi; local ai_cmd; if command -v agy >/dev/null 2>&1; then ai_cmd='agy'; elif command -v gemini >/dev/null 2>&1; then ai_cmd='gemini'; else echo 'Error: Neither agy nor gemini CLI found in PATH.'; return 1; fi; local msg; msg=$(git diff --cached | \"$ai_cmd\" -p 'Write a concise, conventional git commit message for these changes. Use imperative style (e.g. \"add feature\"). Do not wrap the message in markdown or backticks.'); if [ -n \"$msg\" ]; then git commit -e -m \"$msg\"; else echo 'Failed to generate commit message.'; return 1; fi; }; f";
+            commit-ai = "!git cai";
           };
           core = {
             compression = 9;
@@ -123,6 +125,8 @@ in
         ga  = "git add";
         gap = "git add --patch";
         gc  = "git commit";
+        gac = "git cai";
+        gai = "git cai";
         gp  = "git push";
         gu  = "git pull";
         gl  = "git log --all --graph --pretty=format:'%C(magenta)%h %C(white) %an  %ar%C(auto)  %D%n%s%n'";

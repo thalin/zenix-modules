@@ -12,9 +12,18 @@ Git Home-Manager module. Sets up username, email, some basic configuration and a
 
 ## Aliases
 
+### Git Aliases
+
 | Alias | Action |
 | :---: | :----: |
 | `it` | Initialize a new empty repo with whatever contents are inside. Allows no contents. |
+| `cai` / `commit-ai` | Analyze changes in the staging area using `agy` or `gemini` and commit with the generated message (interactive). |
+
+### Shell Aliases
+
+| Alias | Action |
+| :---: | :----: |
+| `gac` / `gai` | Run `git cai` to commit using AI-generated messages. |
 
 ## Config
 
