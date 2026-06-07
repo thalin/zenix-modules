@@ -20,6 +20,7 @@ in
   config = mkIf cfg.enable {
     gtk = {
       enable = true;
+      gtk4.theme = config.gtk.theme;
     };
     #
     # # Turn on QT

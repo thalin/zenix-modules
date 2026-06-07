@@ -8,11 +8,12 @@ in
   config = mkIf cfg.enable {
     programs.ssh = {
       enable = true;
-      matchBlocks = {
+      enableDefaultConfig = false;
+      settings = {
         # just an example for github
         "gh" = {
-          hostname = "github.com";
-          user = "git";
+          HostName = "github.com";
+          User = "git";
         };
       };
     };
