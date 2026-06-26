@@ -4,12 +4,19 @@ let
   inherit (lib) mkOption mkIf types;
 in
 {
-  options.zen.gui.qtile.enable = mkOption {
-    type = types.bool;
-    # default = osConfig.zen.gui.qtile.enable;
-    default = false;
-    description = "zen gui home: enable qtile";
-    example = true;
+  options.zen.gui.qtile = {
+    enable = mkOption {
+      type = types.bool;
+      # default = osConfig.zen.gui.qtile.enable;
+      default = false;
+      description = "zen gui home: enable qtile";
+      example = true;
+    };
+    settings = mkOption {
+      type = types.attrsOf types.anything;
+      default = {};
+      description = "Qtile configuration overrides for the host";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -22,6 +29,7 @@ in
       ".config/qtile/config/groups.py".source = ./config/groups.py;
       ".config/qtile/config/layouts.py".source = ./config/layouts.py;
       ".config/qtile/config/vars.py".source = ./config/vars.py;
+      ".config/qtile/config/host_vars.json".text = builtins.toJSON cfg.settings;
       ".config/qtile/config/floating.py".source = ./config/floating.py;
       ".config/qtile/config/hooks.py".source = ./config/hooks.py;
       ".config/qtile/config/keys.py".source = ./config/keys.py;

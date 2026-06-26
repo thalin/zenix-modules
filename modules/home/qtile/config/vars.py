@@ -1,3 +1,5 @@
+import os
+import json
 from .logging import logger
 
 host_options = None
@@ -43,14 +45,17 @@ battery:
     description: should the main top bar include qtile battery widget
 """
 
-try:
-    # this host_vars.py should be populated by home-manager, sourced from
-    # nixos-config/thalin/hosts/<hostname>/host_vars.py
-    from .host_vars import options as host_options
+host_vars_json_path = os.path.join(os.path.dirname(__file__), 'host_vars.json')
 
-    logger.info("Imported host_vars.options")
-except ImportError:
-    logger.info("Unable to import host_vars.options")
+try:
+    if os.path.exists(host_vars_json_path):
+        with open(host_vars_json_path, 'r') as f:
+            host_options = json.load(f)
+        logger.info("Imported host_vars.json")
+    else:
+        logger.info("host_vars.json not found")
+except Exception as e:
+    logger.info(f"Unable to load host_vars.json: {e}")
 
 # Options with defaults
 options = {
