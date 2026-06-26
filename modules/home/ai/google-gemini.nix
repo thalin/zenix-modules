@@ -12,6 +12,6 @@ in
   options.zen.ai.gemini-ai.enable = mkEnableOption "zen home: enable gemini-ai tools";
   
   config = mkIf cfg.enable {
-    home.packages = with pkgs; [ gemini-cli antigravity ];
+    home.packages = with pkgs; [ gemini-cli antigravity antigravity-cli ];
   };
 }
