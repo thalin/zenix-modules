@@ -22,6 +22,10 @@
       # url = "github:nix-community/stylix/release-26.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    herdr = {
+      url = "github:ogulcancelik/herdr/v0.7.1";
+    };
     
   };
 
@@ -29,6 +33,7 @@
     inputs.snowfall-lib.mkFlake {
       inherit inputs;
       src = ./.;
+
       # https://snowfall.org/guides/lib/channels/
       channels-config.allowUnfree = true;
 

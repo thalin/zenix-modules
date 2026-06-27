@@ -28,6 +28,7 @@ in
       just
       comma
       nix-index
+      herdr
     ] ++ lib.optionals (pkgs.stdenv.isLinux) [ usbutils psmisc ];
 
     programs = {
