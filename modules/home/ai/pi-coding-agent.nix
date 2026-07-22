@@ -26,12 +26,18 @@ in
       default = "gemini-3.5-flash";
       description = "The AI model to use for pi-coding-agent";
     };
+    gemini_api_key = lib.mkOption {
+      type = lib.types.path;
+      default = /dev/null;
+      description = "The path to the secret gemini api key. Use sops-nix or something.";
+    };
+    openrouter_api_key = lib.mkOption {
+      type = lib.types.path;
+      default = /dev/null;
+      description = "The path to the secret openrouter api key. Use sops-nix or something.";
   };
 
   config = mkIf cfg.enable {
-    sops.secrets.gemini_api_key = { };
-    sops.secrets.openrouter_api_key = { };
-
     home.packages = [
       pkgs.graphify
     ];
@@ -42,8 +48,8 @@ in
         inherit (cfg) provider model;
       };
       environment = {
-        GEMINI_API_KEY = config.sops.secrets.gemini_api_key.path;
-        OPENROUTER_API_KEY = config.sops.secrets.openrouter_api_key.path;
+        GEMINI_API_KEY = cfg.gemini_api_key;
+        OPENROUTER_API_KEY = cfg.openrouter_api_key;
       };
     };
   };
