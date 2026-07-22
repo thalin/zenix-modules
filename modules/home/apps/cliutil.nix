@@ -28,8 +28,11 @@ in
       just
       comma
       nix-index
+    ] ++ lib.optionals (pkgs.stdenv.isLinux) [ 
+      usbutils
+      psmisc
       herdr
-    ] ++ lib.optionals (pkgs.stdenv.isLinux) [ usbutils psmisc ];
+    ];
 
     programs = {
       bat = {

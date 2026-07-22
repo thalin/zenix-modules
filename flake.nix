@@ -26,6 +26,12 @@
     herdr = {
       url = "github:ogulcancelik/herdr/v0.7.1";
     };
+
+    pi = {
+      url = "github:lukasl-dev/pi.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    
     
   };
 
