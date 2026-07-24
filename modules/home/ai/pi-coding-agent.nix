@@ -10,7 +10,7 @@ let
   inherit (lib) mkEnableOption mkIf;
 in
 {
-  imports = mkIf cfg.enable [
+  imports = [
     inputs.pi.homeModules.default
   ];
 
@@ -35,6 +35,7 @@ in
       type = lib.types.path;
       default = /dev/null;
       description = "The path to the secret openrouter api key. Use sops-nix or something.";
+    };
   };
 
   config = mkIf cfg.enable {
