@@ -28,12 +28,12 @@ in
     };
     gemini_api_key = lib.mkOption {
       type = lib.types.path;
-      default = /dev/null;
+      default = pkgs.emptyFile;
       description = "The path to the secret gemini api key. Use sops-nix or something.";
     };
     openrouter_api_key = lib.mkOption {
       type = lib.types.path;
-      default = /dev/null;
+      default = pkgs.emptyFile;
       description = "The path to the secret openrouter api key. Use sops-nix or something.";
     };
   };
@@ -49,8 +49,8 @@ in
         inherit (cfg) provider model;
       };
       environment = {
-        GEMINI_API_KEY = cfg.gemini_api_key;
-        OPENROUTER_API_KEY = cfg.openrouter_api_key;
+        GEMINI_API_KEY = { file = toString cfg.gemini_api_key; };
+        OPENROUTER_API_KEY = { file = toString cfg.openrouter_api_key; };
       };
     };
   };

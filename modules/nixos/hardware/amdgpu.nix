@@ -19,6 +19,7 @@ in
     ];
 
     services.lact.enable = true;
+    systemd.services.lactd.wantedBy = lib.mkForce [ "graphical.target" ];
 
     hardware.amdgpu.overdrive.enable = true;
   };
