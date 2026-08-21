@@ -52,6 +52,7 @@ in
       pkgs.xkill
       pkgs.xev
       pkgs.flameshot
+      pkgs.wlr-randr
     ];
 
     programs.kitty = {

@@ -5,8 +5,42 @@ from libqtile import hook
 
 # from libqtile.log_utils import logger
 from .logging import logger
+from .vars import options
 
 logger.info("Registering Qtile hooks")
+
+
+@hook.subscribe.startup_complete
+def configure_wayland_outputs():
+    """Apply wayland_outputs via wlr-randr once the wayland backend is up.
+
+    wlr-randr talks to qtile's own compositor over wlr-output-management, so
+    it needs qtile's event loop to be free to service that request. Calling
+    it with subprocess.run() (blocking) from inside a hook deadlocks the
+    whole compositor: the hook is running on the event loop thread, so
+    subprocess.run() blocks that thread, so wlr-randr never gets a reply,
+    so subprocess.run() never returns. Popen (fire-and-forget) avoids this.
+    """
+    if os.environ.get("WAYLAND_DISPLAY") is None:
+        return
+
+    for out in options.get("wayland_outputs", []):
+        name = out.get("output")
+        mode = out.get("mode")
+        if not name or not mode:
+            logger.info(f"Skipping invalid wayland_outputs entry: {out}")
+            continue
+
+        # --custom-mode (vs --mode) doesn't require an exact match against the
+        # compositor's EDID-enumerated refresh rates (which are often
+        # inexact, e.g. 119.997002Hz instead of a round 120Hz).
+        args = ["wlr-randr", "--output", name, "--custom-mode", mode]
+        if out.get("position"):
+            args += ["--pos", out["position"]]
+
+        logger.info(f"Setting wayland output {name} to mode {mode}")
+        with open("/home/thalin/qtile-config.log", "a") as log_file:
+            subprocess.Popen(args, stdout=log_file, stderr=log_file)
 
 # def detect_screens(qtile):
 #  """

@@ -1,6 +1,6 @@
 {
-  config, lib, pkgs, ...
-}: 
+  config, lib, ...
+}:
 let
   inherit (lib) mkEnableOption mkIf;
   inherit (lib.snowzen) mkIfElse;
@@ -39,19 +39,10 @@ in
     services.xserver = mkIfElse (nixcfg.release == "24.04") {
       windowManager.qtile = {
         enable = true;
-        package = pkgs.python3Packages.qtile.overrideAttrs (old: {
-          doCheck = false;
-          doInstallCheck = false;
-        });
         extraPackages = py3Pkg: with py3Pkg; [
-          (qtile-extras.overridePythonAttrs(old: { disabledTestPaths = [
+          (qtile-extras.overridePythonAttrs(_old: { disabledTestPaths = [
             "test/widget/test_githubnotifications.py"
-            # "test/widget/test_strava.py"
-            # "test/widget/test_visualiser.py"
-            # "test/widget/test_iwd.py"
-            # "test/widget/test_upower.py"
-            # "test/widget/test_image.py"
-          ]; })) # qtile-extras override
+          ]; }))
           screeninfo
         ];
         # backend = if guicfg.wayland then "wayland" else "x11";
@@ -72,10 +63,6 @@ in
     } { # the else branch of the mkIfElse for services.xserver
       windowManager.qtile = {
         enable = true;
-        package = pkgs.python3Packages.qtile.overrideAttrs (old: {
-          doCheck = false;
-          doInstallCheck = false;
-        });
         extraPackages = py3Pkg: with py3Pkg; [
           qtile-extras
           screeninfo

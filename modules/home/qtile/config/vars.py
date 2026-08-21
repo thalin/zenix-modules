@@ -43,6 +43,21 @@ battery:
     type: bool
     default: false
     description: should the main top bar include qtile battery widget
+wayland_outputs:
+    type: list of dicts
+    default: []
+    description: outputs to configure via wlr-randr when running under the wayland backend
+    sub options (per dict):
+        output:
+            type: string
+            description: output/connector name, e.g. "DP-3"
+        mode:
+            type: string
+            description: mode to set, e.g. "7680x2160@120"
+        position:
+            type: string
+            default: undefined
+            description: optional position, e.g. "0,0"
 """
 
 host_vars_json_path = os.path.join(os.path.dirname(__file__), 'host_vars.json')
@@ -66,6 +81,7 @@ options = {
     "systray_icon_size": 36,
     "upower_widget_enable": False,
     "battery": False,
+    "wayland_outputs": [],
 }
 
 if host_options is not None:
