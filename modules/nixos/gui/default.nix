@@ -40,9 +40,16 @@ in
     # Enable SDDM display manager
     services.displayManager.sddm = {
       enable = true;
-      # theme = pkgs.ariel-sddm-theme;
-      # theme = outputs.packages.${system}.ariel-sddm-theme;
-      theme = "${import ../../../packages/ariel-sddm-theme/default.nix { inherit pkgs; }}";
+      theme = "${pkgs.sddm-astronaut}/share/sddm/themes/sddm-astronaut-theme";
+      # Cinematic video-background theme (see packages/ariel-sddm-theme) -
+      # a Qt6 port, since the original Qt5-only theme is no longer
+      # loadable by current SDDM. Swap in if you want it instead:
+      # theme = "${import ../../../packages/ariel-sddm-theme/default.nix { inherit pkgs; }}/share/sddm/themes/aerial-cinematic-qt6";
+      extraPackages = [
+        # Required for video backgrounds/audio (both sddm-astronaut's
+        # embedded themes and the cinematic theme above use these).
+        pkgs.kdePackages.qtmultimedia
+      ];
       wayland.enable = mkIfElse cfg.wayland true false;
     };
 
@@ -53,11 +60,5 @@ in
         size = 32;
       };
     };
-
-    environment.systemPackages = [
-      # These qt5 packages allow the sddm theme to work.
-      pkgs.libsForQt5.qt5.qtmultimedia
-      pkgs.libsForQt5.qt5.qtgraphicaleffects
-    ];
   };
 } 

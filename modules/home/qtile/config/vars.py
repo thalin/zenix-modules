@@ -53,11 +53,51 @@ wayland_outputs:
             description: output/connector name, e.g. "DP-3"
         mode:
             type: string
-            description: mode to set, e.g. "7680x2160@120"
+            description: mode to set, e.g. "7680x2160@120Hz" (needs the Hz suffix)
         position:
             type: string
             default: undefined
             description: optional position, e.g. "0,0"
+        scale:
+            type: float
+            default: undefined
+            description: optional per-output scale factor, e.g. 1.25
+x11_outputs:
+    type: list of dicts
+    default: []
+    description: outputs to configure via xrandr when running under the x11 backend
+    sub options (per dict):
+        output:
+            type: string
+            description: output/connector name, e.g. "DP-3"
+        mode:
+            type: string
+            description: mode to set, e.g. "7680x2160"
+        rate:
+            type: string
+            default: undefined
+            description: optional refresh rate, e.g. "120.00"
+        primary:
+            type: bool
+            default: false
+            description: whether to mark this output primary
+force_tiled_wm_classes:
+    type: list of strings
+    default: []
+    description: |
+        wm_class values to force tiled (never floating), e.g. for apps
+        with fixed-size WM hints that make qtile auto-float them, whose
+        own requested floating geometry ends up ignoring/overlapping the
+        bars. Tiled placement already respects bar space correctly.
+steam_group:
+    type: string
+    default: undefined
+    description: |
+        If set, keep the Steam client (wm_class "Steam") and any window
+        Steam itself actually launches (wm_class "steam_app_<appid>") on
+        this group. Games merely run via steam-run (the NixOS FHS compat
+        shim, not Steam's own launcher) don't match this and are
+        unaffected.
 """
 
 host_vars_json_path = os.path.join(os.path.dirname(__file__), 'host_vars.json')
@@ -82,6 +122,8 @@ options = {
     "upower_widget_enable": False,
     "battery": False,
     "wayland_outputs": [],
+    "x11_outputs": [],
+    "force_tiled_wm_classes": [],
 }
 
 if host_options is not None:

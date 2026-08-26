@@ -53,7 +53,17 @@ def widget_factory_top(main=False):
     if main:
         widgets.extend(
             [
+                # Systray (legacy XEmbed) still covers X11-only tray apps;
+                # qtile itself auto-drops this widget under the wayland
+                # backend (XEmbed doesn't exist there), so no conditional
+                # needed here.
                 widget.Systray(icon_size=systray_icon_size, background=theme["dark1"]),
+                # StatusNotifier uses the freedesktop StatusNotifierItem/
+                # AppIndicator DBus spec instead, which works on both X11
+                # and Wayland, covering the apps Systray can't under wayland.
+                widget.StatusNotifier(
+                    icon_size=systray_icon_size, background=theme["dark1"]
+                ),
                 widget.Spacer(length=10, background=theme["dark1"], **powerline_right),
                 widget.PulseVolume(
                     step=5,

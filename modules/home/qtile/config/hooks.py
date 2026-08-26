@@ -11,6 +11,105 @@ logger.info("Registering Qtile hooks")
 
 
 @hook.subscribe.startup_complete
+def import_wayland_systemd_environment():
+    """Import WAYLAND_DISPLAY into systemd --user so units gated on it can start.
+
+    Compositors like sway/hyprland run `systemctl --user import-environment`
+    themselves during their own startup; qtile doesn't. Without it, systemd's
+    user manager never sees WAYLAND_DISPLAY at all (it's set inside qtile's
+    own process, not exported anywhere systemd can see), so any unit using
+    ConditionEnvironment=WAYLAND_DISPLAY (e.g. home-manager's wpaperd
+    service) fails its condition check and silently never starts -
+    graphical-session.target is already reached (and dependents already
+    attempted) before this hook ever runs, so a plain import isn't enough;
+    the previously-skipped unit needs an explicit restart too.
+    """
+    if os.environ.get("WAYLAND_DISPLAY") is None:
+        return
+
+    subprocess.Popen(
+        [
+            "sh",
+            "-c",
+            "systemctl --user import-environment WAYLAND_DISPLAY "
+            "&& systemctl --user restart wpaperd.service",
+        ]
+    )
+
+
+@hook.subscribe.startup_complete
+def configure_x11_outputs():
+    """Apply x11_outputs via xrandr once the X11 backend is up.
+
+    The X server doesn't always come up at the highest refresh rate a mode
+    supports on its own (kernel/EDID may pick a lower default), same
+    underlying issue as wayland_outputs. xrandr talks to a separate Xorg
+    process rather than qtile itself, so unlike wlr-randr there's no
+    self-deadlock risk here, but Popen is used anyway for consistency.
+    """
+    if os.environ.get("WAYLAND_DISPLAY") is not None:
+        return
+
+    for out in options.get("x11_outputs", []):
+        name = out.get("output")
+        mode = out.get("mode")
+        if not name or not mode:
+            logger.info(f"Skipping invalid x11_outputs entry: {out}")
+            continue
+
+        args = ["xrandr", "--output", name, "--mode", mode]
+        if out.get("rate"):
+            args += ["--rate", str(out["rate"])]
+        if out.get("primary"):
+            args += ["--primary"]
+
+        logger.info(f"Setting X11 output {name} to mode {mode}")
+        with open("/home/thalin/qtile-config.log", "a") as log_file:
+            subprocess.Popen(args, stdout=log_file, stderr=log_file)
+
+
+@hook.subscribe.client_new
+def force_tiled_windows(client):
+    """Force specific wm_classes to tile instead of float.
+
+    Some apps (e.g. Wine/Proton games with fixed-size WM hints) get
+    auto-floated by qtile's default float heuristics, then request their
+    own floating geometry that ignores/overlaps qtile's bars. Tiled
+    placement already respects bar space correctly via the normal layout
+    engine, so forcing tiled sidesteps the bad geometry entirely instead
+    of trying to override it with hardcoded coordinates.
+    """
+    wm_class = client.window.get_wm_class() or ()
+    for cls in options.get("force_tiled_wm_classes", []):
+        if cls in wm_class:
+            logger.info(f"Forcing tiled placement for wm_class {wm_class}")
+            client.floating = False
+            break
+
+
+@hook.subscribe.client_new
+def group_steam_windows(client):
+    """Keep the Steam client and Steam-launched games on one group.
+
+    switch_group defaults to False, so this moves the window without
+    yanking focus away from whatever group is currently being viewed -
+    important since Steam's client/overlay spawns many background helper
+    windows that shouldn't interrupt whatever else is going on.
+    """
+    steam_group = options.get("steam_group")
+    if not steam_group:
+        return
+
+    wm_class = client.window.get_wm_class() or ()
+    is_steam = any(
+        c.lower() == "steam" or c.lower().startswith("steam_app_") for c in wm_class
+    )
+    if is_steam:
+        logger.info(f"Sending steam window {wm_class} to group {steam_group}")
+        client.togroup(steam_group)
+
+
+@hook.subscribe.startup_complete
 def configure_wayland_outputs():
     """Apply wayland_outputs via wlr-randr once the wayland backend is up.
 
@@ -37,6 +136,8 @@ def configure_wayland_outputs():
         args = ["wlr-randr", "--output", name, "--custom-mode", mode]
         if out.get("position"):
             args += ["--pos", out["position"]]
+        if out.get("scale"):
+            args += ["--scale", str(out["scale"])]
 
         logger.info(f"Setting wayland output {name} to mode {mode}")
         with open("/home/thalin/qtile-config.log", "a") as log_file:

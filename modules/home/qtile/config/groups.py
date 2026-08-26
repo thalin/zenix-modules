@@ -21,7 +21,7 @@ group_map = OrderedDict(
             "F2",
             Group(
                 "F2",
-                # spawn="brave",
+                spawn="brave",
                 layout="max",
             ),
         ),
@@ -29,7 +29,7 @@ group_map = OrderedDict(
             "F3",
             Group(
                 "F3",
-                # spawn="steam",
+                spawn="obsidian",
                 layout="max",
             ),
         ),
@@ -54,6 +54,7 @@ for i in range(5, 9):
 for i in range(9, 13):
     fkey = f"F{i}"
     # fkey = "F{}".format(i)
-    group_map[fkey] = Group(fkey, layout="ratiotile")
+    layout = "max" if fkey in ("F9", "F10") else "ratiotile"
+    group_map[fkey] = Group(fkey, layout=layout)
 
 groups = list(group_map.values())

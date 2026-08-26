@@ -1,3 +1,6 @@
+import os
+import signal
+
 from libqtile.lazy import lazy
 from libqtile.config import Key
 from libqtile.config import Key, Drag, Click
@@ -7,6 +10,56 @@ from libqtile.config import Key, Drag, Click
 from .groups import group_map
 from .logging import logger
 from .vars import options
+
+
+def _descendant_pids(pid):
+    """Return [pid] plus every descendant pid, via /proc's kernel-provided child list.
+
+    Deliberately not process-group based: the wayland session is exec'd
+    straight from the sddm session script with no setsid, so qtile itself
+    and every app it spawns can end up sharing one process group. A
+    group-based kill can take out qtile (and the whole session) along with
+    the target app. Walking /proc's actual parent/child tree can only ever
+    reach real descendants of `pid`.
+    """
+    pids = [pid]
+    try:
+        with open(f"/proc/{pid}/task/{pid}/children") as f:
+            children = [int(p) for p in f.read().split()]
+    except (FileNotFoundError, ProcessLookupError):
+        children = []
+    for child in children:
+        pids.extend(_descendant_pids(child))
+    return pids
+
+
+@lazy.function
+def kill_process_tree(qtile):
+    """Forcibly kill the focused window's whole process tree.
+
+    lazy.window.kill() only closes the one window/toplevel; for apps like
+    browsers that keep many windows in a single process, that leaves the
+    rest of the app running instead of triggering its crash/session-restore
+    behavior on next launch. This is the wayland-native equivalent of what
+    xkill effectively achieved on X11: an unclean, unrecoverable kill of the
+    whole app, not just the window under the cursor.
+    """
+    win = qtile.current_window
+    if win is None:
+        return
+    try:
+        pid = win.get_pid()
+    except AttributeError as e:
+        logger.info(f"kill_process_tree: failed to get pid: {e}")
+        return
+
+    pids = _descendant_pids(pid)
+    logger.info(f"kill_process_tree: killing pids {pids}")
+    for p in pids:
+        try:
+            os.kill(p, signal.SIGKILL)
+        except ProcessLookupError:
+            pass
 
 mod = "mod4"  # windows key
 alt = "mod1"
@@ -40,6 +93,8 @@ keys = [
     # multiple stack panes
     Key([mod, shift], "Return", lazy.layout.toggle_split()),
     Key([mod], "Return", lazy.spawn(options["term"])),
+    Key([mod], "BackSpace", lazy.spawn(options["term"])),
+    Key([mod], "f", lazy.window.toggle_fullscreen()),
     Key(
         [mod, shift],
         "l",
@@ -49,6 +104,7 @@ keys = [
     # Toggle between different layouts as defined below
     Key([mod], "Tab", lazy.next_layout()),
     Key([mod], "c", lazy.window.kill()),
+    Key([mod, shift], "c", kill_process_tree),
     # Media keys
     Key(
         [],
