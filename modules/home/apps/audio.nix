@@ -11,6 +11,8 @@ in
       pavucontrol
       spotifyd
       spotify
+      cliamp
+      yt-dlp
     ];
     services.mpd = {
       enable = true;
