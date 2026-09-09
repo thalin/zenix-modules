@@ -1,5 +1,7 @@
+from libqtile.scratchpad import ScratchPad
 from qtile_extras import widget
 from qtile_extras.widget.decorations import PowerLineDecoration
+from qtile_extras.widget.groupbox2 import GroupBoxRule
 
 from .vars import options
 from .themes.gruvbox import theme
@@ -29,6 +31,88 @@ powerline_right = {
         PowerLineDecoration(path="arrow_right"),
     ]
 }
+
+
+# Left inset for the label; the right side gets whatever's left over after
+# the label plus the arrow's own reach plus a small gap - see box_size below.
+GROUP_PADDING_LEFT = 8
+GROUP_ARROW_GAP = 6  # breathing room between the label and the arrow's tail
+
+
+def _group_fill_colour(group, qtile):
+    """Returns (block_colour, text_colour) for a group's current status.
+
+    Grey scale only, darker = less active; urgent is the one exception that
+    keeps a warning colour so real errors stay noticeable."""
+    if any(w.urgent for w in group.windows):
+        return theme["neutral_yellow"], theme["dark0_hard"]
+    if qtile.current_group is group:
+        return theme["light4"], theme["dark0_hard"]
+    if group.windows:
+        return theme["dark3"], theme["light1"]
+    return theme["dark1"], theme["light4"]
+
+
+def _arrow_edge_width(bar_height):
+    return bar_height * 0.35
+
+
+def _text_width(box, text):
+    layout = box.drawer.textlayout(
+        text, "ffffff", box.font, box.fontsize, box.fontshadow, markup=box.markup
+    )
+    return layout.width
+
+
+def _set_group_format(rule, box):
+    rule.block_colour, rule.text_colour = _group_fill_colour(box.group, box.qtile)
+
+    text = box.group.label or box.group.name
+    edge = _arrow_edge_width(box.bar.height)
+    rule.box_size = int(
+        GROUP_PADDING_LEFT + _text_width(box, text) + GROUP_ARROW_GAP + edge
+    )
+    return True
+
+
+def _visible_groups(qtile):
+    # Mirrors GroupBox2._get_groups()'s own filtering so box.index lines up.
+    return [g for g in qtile.groups if not isinstance(g, ScratchPad)]
+
+
+def _draw_powerline_edge(box):
+    """Draw a small right-pointing arrowhead at the box's right edge, in the
+    box's own colour, blending into the next group's actual colour - matches
+    the PowerLineDecoration look used elsewhere in this bar, scoped to a
+    small strip at the edge rather than the whole box."""
+    ctx = box.drawer.ctx
+    w, h = box.size, box.bar.height
+    edge = min(_arrow_edge_width(h), w / 2)
+
+    groups = _visible_groups(box.qtile)
+    idx = box.index + 1
+    if idx < len(groups):
+        next_colour, _ = _group_fill_colour(groups[idx], box.qtile)
+    else:
+        next_colour = box.bar.background  # widget's own background
+
+    ctx.new_path()
+    ctx.rectangle(w - edge, 0, edge, h)
+    box.drawer.set_source_rgb(next_colour)
+    ctx.fill()
+
+    ctx.new_path()
+    ctx.move_to(w - edge, 0)
+    ctx.line_to(w, h / 2)
+    ctx.line_to(w - edge, h)
+    ctx.close_path()
+    box.drawer.set_source_rgb(box.block_colour)
+    ctx.fill()
+
+
+group_box_rules = [
+    GroupBoxRule(custom_draw=_draw_powerline_edge).when(func=_set_group_format),
+]
 
 
 # Widget factory, top
@@ -98,21 +182,15 @@ def widget_factory_top(main=False):
 def widget_factory_bottom(main=False):
     """Populate some widgets.
 
-    Supports 1 or 3 screens. On only one screen and the middle screen for 3 screens,
-    add some additional widgets."""
+    ``main`` is unused here (every bottom bar gets the same widgets) but kept
+    so this matches widget_factory_top's signature for bar_factory."""
     widgets = [
-        widget.GroupBox(
-            padding=10,
-            spacing=5,
-            center_aligned=True,
-            disable_drag=True,
-            highlight_method="block",
-            block_highlight_text_color=theme["light0"],
-            background=theme["dark2"],
-            this_current_screen_border=theme["bright_blue"],
-            this_screen_border=theme["neutral_blue"],
-            urgent_block=theme["neutral_yellow"],
-            **powerline_left
+        widget.GroupBox2(
+            padding_x=GROUP_PADDING_LEFT,
+            padding_y=6,
+            margin=0,
+            rules=group_box_rules,
+            background=theme["dark0"],
         ),
         widget.Prompt(
             background=theme["dark1"],
@@ -121,16 +199,10 @@ def widget_factory_bottom(main=False):
             **powerline_left
         ),
         widget.Spacer(**powerline_right),
+        widget.Clock(
+            background=theme["faded_blue"],
+            foreground=theme["light0"],
+            format="%Y-%m-%d %a %I:%M %p",
+        ),
     ]
-    # Add some widgets to main screen
-    if main:
-        widgets.extend(
-            [
-                widget.Clock(
-                    background=theme["faded_blue"],
-                    foreground=theme["light0"],
-                    format="%Y-%m-%d %a %I:%M %p",
-                ),
-            ]
-        )
     return widgets
