@@ -7,8 +7,7 @@ let
 
   guicfg = config.zen.gui;
   cfg = guicfg.qtile;
-  nixcfg = config.system.nixos;
-  
+
   qtile_pkg = config.services.xserver.windowManager.qtile.finalPackage;
   qtile_xsession = {
     manage = "desktop";
@@ -36,31 +35,7 @@ in
 
   config = mkIf cfg.enable {
     # Enable the X11 windowing system.
-    services.xserver = mkIfElse (nixcfg.release == "24.04") {
-      windowManager.qtile = {
-        enable = true;
-        extraPackages = py3Pkg: with py3Pkg; [
-          (qtile-extras.overridePythonAttrs(_old: { disabledTestPaths = [
-            "test/widget/test_githubnotifications.py"
-          ]; }))
-          screeninfo
-        ];
-        # backend = if guicfg.wayland then "wayland" else "x11";
-      }; # windowManager.qtile
-
-      displayManager = mkIfElse (guicfg.wayland) {
-        sessionCommands = ''
-          $HOME/.config/qtile/autostart-wayland.sh
-        '';
-        defaultSession = "qtile-wayland";
-      } { # this is the else branch of the mkIfElse for displayManager
-        sessionCommands = ''
-          $HOME/.config/qtile/autostart.sh
-        '';
-        defaultSession = "qtile";
-      };
-
-    } { # the else branch of the mkIfElse for services.xserver
+    services.xserver = {
       windowManager.qtile = {
         enable = true;
         extraPackages = py3Pkg: with py3Pkg; [
@@ -79,9 +54,6 @@ in
           $HOME/.config/qtile/autostart.sh >> $HOME/qtile-config.log
         '';
       };
-    };
-    services.displayManager = mkIf (nixcfg.release == "24.11") {
-      defaultSession = mkIfElse (guicfg.wayland) "qtile-wayland" "qtile";
     };
   };
 } 
