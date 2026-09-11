@@ -7,34 +7,18 @@ let
 
   guicfg = config.zen.gui;
   cfg = guicfg.qtile;
-
-  qtile_pkg = config.services.xserver.windowManager.qtile.finalPackage;
-  qtile_xsession = {
-    manage = "desktop";
-    name = "qtile";
-    start = ''
-    $HOME/.config/qtile/autostart.sh >> $HOME/.config/qtile/qtile.log
-    ${qtile_pkg}/bin/qtile start -c $HOME/.config/qtile/config.py &
-    waitPID=$!
-    '';
-  };
-  qtile_wayland = {
-    manage = "desktop";
-    name = "qtile-wayland";
-    start = ''
-    $HOME/.config/qtile/autostart-wayland.sh >> $HOME/.config/qtile/qtile.log
-    ${qtile_pkg}/bin/qtile start -c $HOME/.config/qtile/config.py -b wayland &
-    waitPID=$!
-    '';
-  };
 in
 {
   options.zen.gui.qtile = {
     enable = mkEnableOption "zen config: enable Qtile window manager";
   };
 
+  # services.xserver.windowManager.qtile unconditionally ships both an
+  # x11 session ("qtile") and a wayland session ("qtile-wayland") via
+  # sessionPackages (the qtile derivation bundles both .desktop files), so
+  # there's no per-backend session to toggle here - just which one SDDM
+  # preselects.
   config = mkIf cfg.enable {
-    # Enable the X11 windowing system.
     services.xserver = {
       windowManager.qtile = {
         enable = true;
@@ -43,17 +27,13 @@ in
           screeninfo
         ];
       };
-      displayManager = mkIfElse (guicfg.wayland) {
-        session = [ qtile_wayland ];
-        sessionCommands = ''
-          $HOME/.config/qtile/autostart-wayland.sh >> $HOME/qtile-config.log
-        '';
-      } {
-        session = [ qtile_xsession ];
-        sessionCommands = ''
-          $HOME/.config/qtile/autostart.sh >> $HOME/qtile-config.log
-        '';
-      };
+
+      # Only sourced for X11 sessions - wayland has no equivalent hook here.
+      displayManager.sessionCommands = ''
+        $HOME/.config/qtile/autostart.sh >> $HOME/qtile-config.log
+      '';
     };
+
+    services.displayManager.defaultSession = mkIfElse guicfg.wayland "qtile-wayland" "qtile";
   };
-} 
+}
