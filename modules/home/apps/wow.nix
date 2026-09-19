@@ -10,6 +10,8 @@ in
     home.packages = with pkgs; [
       faugus-launcher
       instawow
+      mangohud
+      gamemode
     ];
   };
 }
