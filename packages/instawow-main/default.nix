@@ -1,21 +1,18 @@
-# instawow, built from the tip of the `main` branch on GitHub.
+# instawow, pinned to a release ahead of what's currently in nixpkgs.
 #
-# nixpkgs' instawow package tracks tagged releases, which lag behind what's
-# actually needed here. This packages the latest main commit instead. The
+# nixpkgs' instawow package (7.0.0.post1 as of writing) lags behind what's
+# actually needed here. This packages a newer upstream release instead. The
 # upstream pyproject.toml determines its version dynamically via
 # versioningit, which needs real git tag history that a fetchFromGitHub
 # tarball doesn't carry - so postPatch swaps that out for a static version
-# string matching the pinned commit below.
+# string matching the pinned tag below.
 { pkgs }:
 let
-  # Must stay PEP 440-valid (no hyphens) since it's spliced verbatim into
-  # pyproject.toml's static `version` field below.
-  version = "7.0.0.dev20260919";
-  rev = "02a430aad01475339569b60b0a3fe8a9b338551d";
+  version = "7.2.1";
 
-  # nixpkgs' click (8.3.1) is older than main's floor (>=8.4.1) - and this
-  # isn't just a metadata mismatch: instawow's CLI actually uses the
-  # generic-subscriptable ParamType that 8.4 added, so it crashes at
+  # nixpkgs' click (8.3.1) is older than this release's floor (>=8.4.1) -
+  # and this isn't just a metadata mismatch: instawow's CLI actually uses
+  # the generic-subscriptable ParamType that 8.4 added, so it crashes at
   # runtime on 8.3.1. Pull a newer click from PyPI instead of relaxing it.
   click_8_4 = pkgs.python3.pkgs.click.overridePythonAttrs (_: rec {
     version = "8.4.1";
@@ -34,8 +31,8 @@ pkgs.python3.pkgs.buildPythonApplication {
   src = pkgs.fetchFromGitHub {
     owner = "layday";
     repo = "instawow";
-    inherit rev;
-    hash = "sha256-tyGdeBXLUv6EOYub+zVMkniXm1uq8+JXwJX+FOjQDoM=";
+    tag = "v${version}";
+    hash = "sha256-5y+oJfzWwaUc3p4fzsQ4j8a6YJEsI+3Qy3gK6VPkjA4=";
   };
 
   postPatch = ''
@@ -74,7 +71,7 @@ source = "versioningit"' "" \
 
   meta = {
     homepage = "https://github.com/layday/instawow";
-    description = "World of Warcraft add-on manager CLI and GUI (main branch)";
+    description = "World of Warcraft add-on manager CLI and GUI (newer than nixpkgs)";
     mainProgram = "instawow";
     license = pkgs.lib.licenses.gpl3Plus;
   };
