@@ -11,12 +11,10 @@ in
       devenv
     ];
 
-    programs = {
-      direnv = {
-        enable = true;
-        enableZshIntegration = true;
-        nix-direnv.enable = true;
-      };
-    };
+    # devenv's own `devenv hook` replaces direnv for cd-based activation
+    # (devenv >=2.0) - no .envrc needed, just `devenv allow` per project.
+    programs.zsh.initContent = ''
+      eval "$(${pkgs.devenv}/bin/devenv hook zsh)"
+    '';
   };
 }
