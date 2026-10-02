@@ -125,9 +125,9 @@ VOXTYPE_STATE_FILE = os.path.join(
 )
 # state: (text, text colour, background)
 VOXTYPE_STATES = {
-    "idle": ("🎙", theme["light1"], theme["faded_red"]),
-    "recording": ("🎙 REC", theme["light0"], theme["neutral_red"]),
-    "transcribing": ("🎙 ...", theme["bright_yellow"], theme["faded_red"]),
+    "idle": ("🎙", theme["light1"], theme["faded_aqua"]),
+    "recording": ("🎙 REC", theme["light0"], theme["neutral_orange"]),
+    "transcribing": ("🎙 ...", theme["bright_yellow"], theme["faded_aqua"]),
 }
 
 
@@ -150,10 +150,10 @@ class VoxtypeIndicator(widget.GenPollText):
         if not self.can_draw():
             return
         if not state:
-            text, background = "", theme["faded_red"]  # zero-width
+            text, background = "", theme["faded_aqua"]  # zero-width
         else:
             text, colour, background = VOXTYPE_STATES.get(
-                state, (f"🎙 {state}", theme["light1"], theme["faded_red"])
+                state, (f"🎙 {state}", theme["light1"], theme["faded_aqua"])
             )
             text = f'<span foreground="{colour}">{text}</span>'
         if background == self.background:
@@ -241,7 +241,7 @@ def widget_factory_bottom(main=False):
         VoxtypeIndicator(
             update_interval=0.25,
             padding=10,
-            background=theme["faded_red"],
+            background=theme["faded_aqua"],
             **powerline_right
         ),
     ] if main and shutil.which("voxtype") else []
