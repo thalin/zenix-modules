@@ -1,4 +1,5 @@
 import os
+import shutil
 
 from libqtile.scratchpad import ScratchPad
 from qtile_extras import widget
@@ -207,17 +208,19 @@ def widget_factory_top(main=False):
 def widget_factory_bottom(main=False):
     """Populate some widgets.
 
-    ``main`` adds the voxtype indicator to the main screen's bar only."""
+    ``main`` adds the voxtype indicator (when installed) to the main screen's
+    bar only."""
     voxtype = [
-        # Shares the clock's background so the spacer's arrow runs into both;
-        # zero-width on hosts without voxtype (no state file)
+        # Systray grey, with its own arrow into the clock like the top bar's
+        # tray -> volume; zero-width while the daemon isn't running
         widget.GenPollText(
             func=_voxtype_status,
             update_interval=0.25,
             padding=10,
-            background=theme["faded_blue"],
+            background=theme["dark1"],
         ),
-    ] if main else []
+        widget.Spacer(length=10, background=theme["dark1"], **powerline_right),
+    ] if main and shutil.which("voxtype") else []
     widgets = [
         widget.GroupBox2(
             padding_x=GROUP_PADDING_LEFT,
