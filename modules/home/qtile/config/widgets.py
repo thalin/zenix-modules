@@ -123,22 +123,47 @@ group_box_rules = [
 VOXTYPE_STATE_FILE = os.path.join(
     os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}"), "voxtype", "state"
 )
+# state: (text, text colour, background)
 VOXTYPE_STATES = {
-    "idle": ("🎙", theme["light4"]),
-    "recording": ("🎙 REC", theme["bright_red"]),
-    "transcribing": ("🎙 ...", theme["bright_yellow"]),
+    "idle": ("🎙", theme["light1"], theme["faded_red"]),
+    "recording": ("🎙 REC", theme["light0"], theme["neutral_red"]),
+    "transcribing": ("🎙 ...", theme["bright_yellow"], theme["faded_red"]),
 }
 
 
-def _voxtype_status():
-    """Bar text for the voxtype state; empty (zero-width) when it isn't running."""
+def _voxtype_state():
+    """Current voxtype state; empty when the daemon isn't running."""
     try:
         with open(VOXTYPE_STATE_FILE) as f:
-            state = f.read().strip()
+            return f.read().strip()
     except OSError:
         return ""
-    text, colour = VOXTYPE_STATES.get(state, (f"🎙 {state}", theme["light4"]))
-    return f'<span foreground="{colour}">{text}</span>'
+
+
+class VoxtypeIndicator(widget.GenPollText):
+    """Dictation state, with a background that changes while recording."""
+
+    def __init__(self, **config):
+        super().__init__(func=_voxtype_state, **config)
+
+    def update(self, state):
+        if not self.can_draw():
+            return
+        if not state:
+            text, background = "", theme["faded_red"]  # zero-width
+        else:
+            text, colour, background = VOXTYPE_STATES.get(
+                state, (f"🎙 {state}", theme["light1"], theme["faded_red"])
+            )
+            text = f'<span foreground="{colour}">{text}</span>'
+        if background == self.background:
+            super().update(text)
+            return
+        # The powerline arrows on either side take their colours from this
+        # background, so the whole bar has to redraw, not just this widget.
+        self.background = background
+        self.text = text
+        self.bar.draw()
 
 
 # Widget factory, top
@@ -211,15 +236,14 @@ def widget_factory_bottom(main=False):
     ``main`` adds the voxtype indicator (when installed) to the main screen's
     bar only."""
     voxtype = [
-        # Systray grey, with its own arrow into the clock like the top bar's
-        # tray -> volume; zero-width while the daemon isn't running
-        widget.GenPollText(
-            func=_voxtype_status,
+        # Carries its own arrow into the clock so the arrow follows the
+        # state colour; zero-width while the daemon isn't running
+        VoxtypeIndicator(
             update_interval=0.25,
             padding=10,
-            background=theme["dark1"],
+            background=theme["faded_red"],
+            **powerline_right
         ),
-        widget.Spacer(length=10, background=theme["dark1"], **powerline_right),
     ] if main and shutil.which("voxtype") else []
     widgets = [
         widget.GroupBox2(
