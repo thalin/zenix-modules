@@ -64,6 +64,14 @@ in
       enable = pkgs.stdenv.isLinux;
       modes = [ "drun" "run" ];
       terminal = "kitty";
+      # A centred, bordered window instead of rofi's default 50%-of-monitor
+      # width (which is a whole screen with fake_screens). Merges with the
+      # stylix theme; em units scale with the font size.
+      theme.window = {
+        width = config.lib.formats.rasi.mkLiteral "50em";
+        border = config.lib.formats.rasi.mkLiteral "2px";
+        padding = config.lib.formats.rasi.mkLiteral "0.5em";
+      };
     };
   };
 }
