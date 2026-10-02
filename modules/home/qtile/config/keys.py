@@ -117,10 +117,10 @@ keys = [
         lazy.spawn("pactl set-sink-volume @DEFAULT_SINK@ +10%"),
     ),
     Key([], "XF86AudioMute", lazy.spawn("pactl set-sink-mute @DEFAULT_SINK@ toggle")),
-    # Qtile stuff - restart, shutdown, run command
+    # Qtile stuff - restart, shutdown, launcher (shift+arrows switch rofi modes)
     Key([mod, ctrl], "r", lazy.restart()),
     Key([mod, ctrl], "q", lazy.shutdown()),
-    Key([mod], "p", lazy.spawncmd()),
+    Key([mod], "p", lazy.spawn("rofi -show drun")),
 ]
 
 logger.info("Constructing desktop keymaps")

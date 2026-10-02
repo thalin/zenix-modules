@@ -58,5 +58,12 @@ in
     programs.kitty = {
       enable = pkgs.stdenv.isLinux;
     };
+
+    # Launcher for mod+p; rofi 2.x runs under both X11 and qtile-wayland
+    programs.rofi = {
+      enable = pkgs.stdenv.isLinux;
+      modes = [ "drun" "run" ];
+      terminal = "kitty";
+    };
   };
 }
