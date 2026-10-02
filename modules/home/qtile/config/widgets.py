@@ -1,3 +1,5 @@
+import os
+
 from libqtile.scratchpad import ScratchPad
 from qtile_extras import widget
 from qtile_extras.widget.decorations import PowerLineDecoration
@@ -115,6 +117,29 @@ group_box_rules = [
 ]
 
 
+# voxtype dictation daemon writes its current state here; reading the file
+# is much cheaper than spawning `voxtype status` on every poll.
+VOXTYPE_STATE_FILE = os.path.join(
+    os.environ.get("XDG_RUNTIME_DIR", f"/run/user/{os.getuid()}"), "voxtype", "state"
+)
+VOXTYPE_STATES = {
+    "idle": ("🎙", theme["light4"]),
+    "recording": ("🎙 REC", theme["bright_red"]),
+    "transcribing": ("🎙 ...", theme["bright_yellow"]),
+}
+
+
+def _voxtype_status():
+    """Bar text for the voxtype state; empty (zero-width) when it isn't running."""
+    try:
+        with open(VOXTYPE_STATE_FILE) as f:
+            state = f.read().strip()
+    except OSError:
+        return ""
+    text, colour = VOXTYPE_STATES.get(state, (f"🎙 {state}", theme["light4"]))
+    return f'<span foreground="{colour}">{text}</span>'
+
+
 # Widget factory, top
 def widget_factory_top(main=False):
     widgets = [
@@ -182,8 +207,17 @@ def widget_factory_top(main=False):
 def widget_factory_bottom(main=False):
     """Populate some widgets.
 
-    ``main`` is unused here (every bottom bar gets the same widgets) but kept
-    so this matches widget_factory_top's signature for bar_factory."""
+    ``main`` adds the voxtype indicator to the main screen's bar only."""
+    voxtype = [
+        # Shares the clock's background so the spacer's arrow runs into both;
+        # zero-width on hosts without voxtype (no state file)
+        widget.GenPollText(
+            func=_voxtype_status,
+            update_interval=0.25,
+            padding=10,
+            background=theme["faded_blue"],
+        ),
+    ] if main else []
     widgets = [
         widget.GroupBox2(
             padding_x=GROUP_PADDING_LEFT,
@@ -199,6 +233,7 @@ def widget_factory_bottom(main=False):
             **powerline_left
         ),
         widget.Spacer(**powerline_right),
+        *voxtype,
         widget.Clock(
             background=theme["faded_blue"],
             foreground=theme["light0"],
