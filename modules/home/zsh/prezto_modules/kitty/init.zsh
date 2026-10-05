@@ -1,20 +1,10 @@
-# Define the function
+# Use kitten ssh when talking to kitty directly, plain ssh otherwise
+# (e.g. inside a multiplexer like herdr that doesn't answer kitty queries).
 ssh() {
-  # Get the full path to the kitten executable
-  local kitten_path=$(which kitten)
-
-  # Get the full path to the ssh executable
-  local ssh_path=$(which ssh)
-
-  # Capture the output of kitten query-terminal
-  local terminal_output=$($kitten_path query-terminal)
-
-  # Check if the output is not empty
-  if [[ -n "$terminal_output" ]]; then
-    # If there's output, use kitten ssh
-    $kitten_path ssh "$@"
+  # `command` bypasses this function; `which ssh` would return the function body in zsh
+  if [[ -n "$(command kitten query-terminal 2>/dev/null)" ]]; then
+    command kitten ssh "$@"
   else
-    # Otherwise, use regular ssh
-    $ssh_path "$@"
+    command ssh "$@"
   fi
 }
