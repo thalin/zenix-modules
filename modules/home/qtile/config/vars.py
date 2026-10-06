@@ -98,6 +98,41 @@ steam_group:
         this group. Games merely run via steam-run (the NixOS FHS compat
         shim, not Steam's own launcher) don't match this and are
         unaffected.
+notifications:
+    type: bool
+    default: false
+    description: |
+        Put a qtile Notify widget on the main bottom bar. It *is* the
+        notification daemon (org.freedesktop.Notifications), so don't enable
+        it alongside dunst/mako. Notifications stay until clicked away;
+        scroll for older ones, right click runs the default action.
+timers:
+    type: dictionary
+    default: undefined
+    description: countdown timers on the main bottom bar, see timers.py
+    sub options:
+        presets:
+            type: list of dicts
+            default: []
+            description: fixed timers, one widget each
+            sub options (per dict):
+                name:
+                    type: string
+                    description: timer name, also the widget name "timer_<name>"
+                duration:
+                    type: string or number
+                    description: e.g. "4m", "1h30m", "90s"; bare numbers are seconds
+                icon:
+                    type: string
+                    default: "⏲"
+                step:
+                    type: string or number
+                    default: "1m"
+                    description: how much one scroll tick adjusts the timer
+        adhoc:
+            type: bool
+            default: true
+            description: add the ad-hoc timers widget ("adhoc_timers")
 """
 
 host_vars_json_path = os.path.join(os.path.dirname(__file__), 'host_vars.json')
