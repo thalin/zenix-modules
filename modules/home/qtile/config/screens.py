@@ -22,14 +22,20 @@ def make_screens(widths, height, main_screen, bar_size):
     if len(widths) == 0 or len(widths) == 1:
         screens.append(
             Screen(
-                top=bar_factory(bar_size, widget_factory_top, True),
+                top=bar_factory(
+                    bar_size, partial(widget_factory_top, right=True), True
+                ),
                 bottom=bar_factory(bar_size, widget_factory_bottom, True),
             )
         )
     for i, width in enumerate(widths):
         screens.append(
             Screen(
-                top=bar_factory(bar_size, widget_factory_top, i == main_screen),
+                top=bar_factory(
+                    bar_size,
+                    partial(widget_factory_top, right=i == len(widths) - 1),
+                    i == main_screen,
+                ),
                 bottom=bar_factory(bar_size, widget_factory_bottom, i == main_screen),
                 x=now_x,
                 y=0,

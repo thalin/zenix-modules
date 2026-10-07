@@ -36,6 +36,7 @@ in
       ".config/qtile/config/logging.py".source = ./config/logging.py;
       ".config/qtile/config/screens.py".source = ./config/screens.py;
       ".config/qtile/config/widgets.py".source = ./config/widgets.py;
+      ".config/qtile/config/timers.py".source = ./config/timers.py;
       ".config/qtile/config/themes/__init__.py".source = ./config/themes/__init__.py;
       ".config/qtile/config/themes/gruvbox.py".source = ./config/themes/gruvbox.py;
       # Autostart script
@@ -53,6 +54,15 @@ in
       pkgs.xev
       pkgs.flameshot
       pkgs.wlr-randr
+    ] ++ lib.optionals (cfg.settings.notifications or false) [
+      pkgs.libnotify # notify-send, for the bar's Notify widget to show
+    ] ++ lib.optionals (cfg.settings ? timers) [
+      # rofi front end for the bar's ad-hoc timers (mod+t)
+      (pkgs.writeShellApplication {
+        name = "qtile-timer";
+        runtimeInputs = [ pkgs.jq config.programs.rofi.finalPackage ];
+        text = builtins.readFile ./qtile-timer.sh;
+      })
     ];
 
     programs.kitty = {

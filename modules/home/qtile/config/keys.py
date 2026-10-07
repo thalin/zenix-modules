@@ -123,6 +123,17 @@ keys = [
     Key([mod], "p", lazy.spawn("rofi -show drun")),
 ]
 
+if options.get("timers") and options["timers"].get("adhoc", True):
+    keys.extend(
+        [
+            Key([mod], "t", lazy.widget["adhoc_timers"].prompt_add()),
+            Key([mod, shift], "t", lazy.widget["adhoc_timers"].dismiss()),
+        ]
+    )
+
+if options.get("notifications", False):
+    keys.append(Key([mod], "grave", lazy.widget["notify"].clear()))
+
 logger.info("Constructing desktop keymaps")
 for k, g in group_map.items():
     # logger.info('Setting key {} to group {}'.format(k, g.name))

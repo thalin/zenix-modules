@@ -8,6 +8,7 @@ from qtile_extras.widget.groupbox2 import GroupBoxRule
 
 from .vars import options
 from .themes.gruvbox import theme
+from .timers import timer_widgets
 
 widget_font_size = options.get("widget_font_size", 24)
 systray_icon_size = options.get("systray_icon_size", 36)
@@ -167,7 +168,9 @@ class VoxtypeIndicator(widget.GenPollText):
 
 
 # Widget factory, top
-def widget_factory_top(main=False):
+def widget_factory_top(main=False, right=False):
+    """``main`` adds the tray and volume (and power) widgets; ``right``, the
+    rightmost screen, gets the timers and notifications at its far end."""
     widgets = [
         widget.CurrentLayoutIcon(
             padding=10,
@@ -226,6 +229,38 @@ def widget_factory_top(main=False):
                     widget.Spacer(length=10, background=theme["neutral_purple"]),
                 ]
             )
+    if right and options.get("timers"):
+        # Arrow from whatever came last into the first timer, unless that
+        # already draws its own (the stretch spacer on non-main screens)
+        if not getattr(widgets[-1], "decorations", None):
+            widgets.append(
+                widget.Spacer(
+                    length=10,
+                    background=widgets[-1].background,
+                    **powerline_right
+                )
+            )
+        widgets.extend(timer_widgets(options["timers"], **powerline_right))
+    if right and options.get("notifications", False):
+        widgets.append(
+            # Acts as the notification daemon itself, so only one per
+            # session; no timeouts, everything stays until clicked away
+            # (scroll for older). Zero-width while empty.
+            widget.Notify(
+                default_timeout_low=None,
+                default_timeout=None,
+                default_timeout_urgent=None,
+                scroll=True,
+                width=1000,
+                padding=10,
+                background=theme["faded_purple"],
+                foreground=theme["light0"],
+                background_low=theme["dark2"],
+                foreground_low=theme["light3"],
+                background_urgent=theme["neutral_red"],
+                foreground_urgent=theme["light0"],
+            ),
+        )
     return widgets
 
 
