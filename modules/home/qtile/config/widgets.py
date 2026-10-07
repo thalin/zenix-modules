@@ -227,6 +227,38 @@ def widget_factory_top(main=False):
                     widget.Spacer(length=10, background=theme["neutral_purple"]),
                 ]
             )
+        if options.get("timers"):
+            widgets.extend(
+                [
+                    # Arrow from whatever came last into the first timer
+                    widget.Spacer(
+                        length=10,
+                        background=widgets[-1].background,
+                        **powerline_right
+                    ),
+                    *timer_widgets(options["timers"], **powerline_right),
+                ]
+            )
+        if options.get("notifications", False):
+            widgets.append(
+                # Acts as the notification daemon itself, so only one per
+                # session; no timeouts, everything stays until clicked away
+                # (scroll for older). Zero-width while empty.
+                widget.Notify(
+                    default_timeout_low=None,
+                    default_timeout=None,
+                    default_timeout_urgent=None,
+                    scroll=True,
+                    width=1000,
+                    padding=10,
+                    background=theme["faded_purple"],
+                    foreground=theme["light0"],
+                    background_low=theme["dark2"],
+                    foreground_low=theme["light3"],
+                    background_urgent=theme["neutral_red"],
+                    foreground_urgent=theme["light0"],
+                ),
+            )
     return widgets
 
 
@@ -234,30 +266,8 @@ def widget_factory_top(main=False):
 def widget_factory_bottom(main=False):
     """Populate some widgets.
 
-    ``main`` adds the notification area, timers and voxtype indicator (when
-    enabled/installed) to the main screen's bar only."""
-    notify = [
-        # Acts as the notification daemon itself, so only one per session;
-        # no timeouts, everything stays until clicked away (scroll for older)
-        widget.Notify(
-            default_timeout_low=None,
-            default_timeout=None,
-            default_timeout_urgent=None,
-            scroll=True,
-            width=1400,
-            padding=10,
-            background=theme["faded_purple"],
-            foreground=theme["light0"],
-            background_low=theme["dark2"],
-            foreground_low=theme["light3"],
-            background_urgent=theme["neutral_red"],
-            foreground_urgent=theme["light0"],
-            **powerline_left
-        ),
-    ] if main and options.get("notifications", False) else []
-    timers = timer_widgets(
-        options["timers"], **powerline_right
-    ) if main and options.get("timers") else []
+    ``main`` adds the voxtype indicator (when installed) to the main screen's
+    bar only."""
     voxtype = [
         # Carries its own arrow into the clock so the arrow follows the
         # state colour; zero-width while the daemon isn't running
@@ -282,9 +292,7 @@ def widget_factory_bottom(main=False):
             prompt="$ ",
             **powerline_left
         ),
-        *notify,
         widget.Spacer(**powerline_right),
-        *timers,
         *voxtype,
         widget.Clock(
             background=theme["faded_blue"],

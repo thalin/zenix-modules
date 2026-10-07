@@ -185,6 +185,7 @@ class _TimerWidget(widget.TextBox):
     neighbours) to match the timer status."""
 
     def __init__(self, **config):
+        config.setdefault("background", COLOURS["idle"])
         super().__init__(text="", **config)
 
     def _configure(self, qtile, bar):
