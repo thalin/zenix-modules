@@ -102,14 +102,17 @@ notifications:
     type: bool
     default: false
     description: |
-        Put a qtile Notify widget at the right end of the main top bar. It *is* the
-        notification daemon (org.freedesktop.Notifications), so don't enable
-        it alongside dunst/mako. Notifications stay until clicked away;
+        Put a qtile Notify widget at the right end of the rightmost
+        screen's top bar. It *is* the notification daemon
+        (org.freedesktop.Notifications), so don't enable it alongside
+        dunst/mako. Notifications stay until clicked away;
         scroll for older ones, right click runs the default action.
 timers:
     type: dictionary
     default: undefined
-    description: countdown timers on the main top bar (left of notifications), see timers.py
+    description: |
+        countdown timers on the rightmost screen's top bar, just left of
+        the notifications; see timers.py
     sub options:
         presets:
             type: list of dicts
