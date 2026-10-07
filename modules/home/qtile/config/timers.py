@@ -6,9 +6,9 @@ Two kinds of widget:
   Left click starts/pauses/acknowledges, right click resets to the preset,
   scroll nudges the duration (or the time left, while running).
 - AdhocTimers: one widget holding any number of named one-off timers,
-  added through the bar prompt as e.g. "laundry 45m" or "1h30m game".
-  Left click adds one (or dismisses finished ones), right click cancels one
-  by name.
+  added as e.g. "laundry 45m" or "1h30m game" through the qtile-timer rofi
+  script (which calls back into ``add``). Left click adds one (or
+  dismisses finished ones), right click cancels one by name.
 
 Finished timers send an urgent notification and stay highlighted until
 acknowledged. Running timers are kept in $XDG_STATE_HOME/qtile/timers.json
@@ -324,6 +324,7 @@ class AdhocTimers(_TimerWidget):
 
     defaults = [
         ("icon", "⏲", "Icon shown before the timers"),
+        ("add_command", "qtile-timer", "Command that asks for and adds a timer"),
         ("separator", " │ ", "Text between timers"),
     ]
 
@@ -401,9 +402,7 @@ class AdhocTimers(_TimerWidget):
 
     @expose_command()
     def prompt_add(self):
-        prompt = self._prompt()
-        if prompt:
-            prompt.start_input("timer (e.g. laundry 45m)", self.add)
+        self.qtile.spawn(self.add_command)
 
     @expose_command()
     def prompt_cancel(self):

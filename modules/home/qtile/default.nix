@@ -56,6 +56,13 @@ in
       pkgs.wlr-randr
     ] ++ lib.optionals (cfg.settings.notifications or false) [
       pkgs.libnotify # notify-send, for the bar's Notify widget to show
+    ] ++ lib.optionals (cfg.settings ? timers) [
+      # rofi front end for the bar's ad-hoc timers (mod+t)
+      (pkgs.writeShellApplication {
+        name = "qtile-timer";
+        runtimeInputs = [ pkgs.jq config.programs.rofi.finalPackage ];
+        text = builtins.readFile ./qtile-timer.sh;
+      })
     ];
 
     programs.kitty = {
