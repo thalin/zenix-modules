@@ -13,5 +13,8 @@ in
   
   config = mkIf cfg.enable {
     home.packages = with pkgs; [ claude-code jq ];
+
+    # Per-user Claude Code overrides never belong in a repo.
+    programs.git.ignores = [ "**/.claude/settings.local.json" ];
   };
 }
