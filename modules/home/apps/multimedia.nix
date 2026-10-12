@@ -12,5 +12,8 @@ in
       smplayer
       mpv
     ];
+
+    # Only written out where xdg.mimeApps is enabled (zen.gui.librewolf-scaled.defaultBrowser).
+    xdg.mimeApps.defaultApplications."image/jpeg" = "umpv.desktop";
   };
 }

@@ -17,5 +17,12 @@ in
       discord
       signal-desktop
     ];
+
+    # Only written out where xdg.mimeApps is enabled (zen.gui.librewolf-scaled.defaultBrowser).
+    xdg.mimeApps.defaultApplications = {
+      "x-scheme-handler/sgnl" = "signal.desktop";
+      "x-scheme-handler/signalcaptcha" = "signal.desktop";
+      "x-scheme-handler/slack" = "slack.desktop";
+    };
   };
 }

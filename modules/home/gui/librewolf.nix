@@ -29,7 +29,14 @@ let
     exec "${pkgs.librewolf}/bin/librewolf" "$@"
   '';
 
-  inherit (lib) mkEnableOption mkOption mkIf types;
+  browserMimeTypes = [
+    "text/html"
+    "application/xhtml+xml"
+    "x-scheme-handler/http"
+    "x-scheme-handler/https"
+  ];
+
+  inherit (lib) mkEnableOption mkOption mkIf mkMerge types;
 in
 {
   options.zen.gui.librewolf-scaled = {
@@ -49,9 +56,33 @@ in
       description = "Absolute path to the librewolf profile directory to manage user.js in.";
       example = "/home/foo/.librewolf/xxxxxxxx.default";
     };
+    defaultBrowser = mkEnableOption "the wrapper as the default browser (xdg-open, $BROWSER). Turns on xdg.mimeApps, so home-manager takes over ~/.config/mimeapps.list";
   };
 
-  config = mkIf cfg.enable {
-    home.packages = [ librewolf-scaled-wrapper ];
-  };
+  config = mkIf cfg.enable (mkMerge [
+    {
+      home.packages = [ librewolf-scaled-wrapper ];
+
+      # Only the wrapper's bin/ is installed, not pkgs.librewolf itself, so
+      # nothing else provides a desktop entry for xdg-open/menus to use.
+      xdg.desktopEntries.librewolf = {
+        name = "LibreWolf";
+        genericName = "Web Browser";
+        exec = "${librewolf-scaled-wrapper}/bin/librewolf %U";
+        icon = "${pkgs.librewolf}/share/icons/hicolor/128x128/apps/librewolf.png";
+        categories = [ "Network" "WebBrowser" ];
+        mimeType = browserMimeTypes;
+      };
+    }
+    (mkIf cfg.defaultBrowser {
+      # Without a desktop environment, xdg-open falls back to a hardcoded
+      # browser list that includes neither librewolf nor brave.
+      home.sessionVariables.BROWSER = "librewolf";
+      # Other modules declare their own handlers in xdg.mimeApps.defaultApplications.
+      xdg.mimeApps = {
+        enable = true;
+        defaultApplications = lib.genAttrs browserMimeTypes (_: "librewolf.desktop");
+      };
+    })
+  ]);
 }
