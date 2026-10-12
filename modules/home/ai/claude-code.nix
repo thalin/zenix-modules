@@ -106,7 +106,7 @@ in
     );
 
     # TODO: replace with programs.claude-code.mutableSettings after the 26.11 upgrade
-    # (workspace .scratch/hm-26.11-claude-code).
+    # (thalin/nix#12).
     home.activation.claudeCodeSettings =
       let
         jq = lib.getExe pkgs.jq;
