@@ -20,4 +20,13 @@ Examples:
 
 ## Subagents
 
-Use subagents on Sonnet (`model: "sonnet"`) for exploration: reading and summarizing files, finding code paths, locating definitions, sweeping directories. Keep planning, design decisions and final edits on the main model.
+Use subagents on Sonnet for exploration: reading and summarizing files, finding code paths, locating definitions, sweeping directories. Keep planning, design decisions and final edits on the main model.
+
+These agents already run on Sonnet. Launch independent ones together in one message, then work from their summaries instead of re-reading the same files:
+
+- `Explore`: code and file questions.
+- `upstream-research`: nixpkgs or flake-input internals, read at the pinned revision.
+- `fleet-check`: one per host, for "is everything running?" checks.
+- `host-verify`: evaluate or build hosts after a change, in the background.
+
+Forks run on the main model, so use them only when the task needs the full conversation.

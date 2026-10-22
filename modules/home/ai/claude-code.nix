@@ -6,11 +6,33 @@
 }:
 let
   cfg = config.zen.ai.claude-code;
-  inherit (lib) mkEnableOption mkIf mkOption mkDefault types;
+  inherit (lib)
+    mkEnableOption
+    mkIf
+    mkOption
+    mkDefault
+    types
+    ;
   jsonFormat = pkgs.formats.json { };
   settingsFile = "${config.home.homeDirectory}/.claude/settings.json";
   # herdr writes this script itself (`herdr integration install claude`); only the hook entry is ours.
   herdrHook = "${config.home.homeDirectory}/.claude/hooks/herdr-agent-state.sh";
+  delegationNudge = lib.getExe (
+    pkgs.writeShellApplication {
+      name = "claude-delegation-nudge";
+      runtimeInputs = with pkgs; [
+        jq
+        gnugrep
+        coreutils
+      ];
+      text = builtins.readFile ./claude-code/delegation-nudge.sh;
+    }
+  );
+  nudgeHook = arg: {
+    type = "command";
+    command = "${delegationNudge}${arg}";
+    timeout = 5;
+  };
 in
 {
   options.zen.ai.claude-code = {
@@ -44,7 +66,12 @@ in
     programs.claude-code = {
       enable = true;
       context = ./claude-code/CLAUDE.md;
+      # Sonnet agents the main thread delegates to; Explore overrides the built-in,
+      # which otherwise runs on the main model.
+      agentsDir = ./claude-code/agents;
     };
+    # Saved workflows, run as /review-loop and /fleet-check.
+    home.file."${config.programs.claude-code.configDir}/workflows".source = ./claude-code/workflows;
     # Replaces the hand-written copy this module was seeded from.
     home.file."${config.programs.claude-code.configDir}/CLAUDE.md".force = true;
 
@@ -63,6 +90,8 @@ in
           MCP_TIMEOUT = "30000";
           MCP_TOOL_TIMEOUT = "600000";
           _ZO_DOCTOR = "0";
+          # Agents without their own model (general-purpose, workflow stages) use Sonnet.
+          CLAUDE_CODE_SUBAGENT_MODEL = "sonnet";
         };
         # allow/deny are left out so "always allow" answers survive activation.
         permissions.defaultMode = "auto";
@@ -86,19 +115,30 @@ in
         verbose = true;
         autoCompactEnabled = true;
       }
-      // lib.optionalAttrs config.zen.ai.herdr.enable {
-        hooks.SessionStart = [
-          {
-            matcher = "^(startup|resume|clear|compact|fork)$";
-            hooks = [
-              {
-                type = "command";
-                command = "bash '${herdrHook}' session";
-                timeout = 10;
-              }
-            ];
-          }
-        ];
+      // {
+        hooks = {
+          PreToolUse = [
+            {
+              matcher = "*";
+              hooks = [ (nudgeHook "") ];
+            }
+          ];
+          UserPromptSubmit = [ { hooks = [ (nudgeHook " reset") ]; } ];
+        }
+        // lib.optionalAttrs config.zen.ai.herdr.enable {
+          SessionStart = [
+            {
+              matcher = "^(startup|resume|clear|compact|fork)$";
+              hooks = [
+                {
+                  type = "command";
+                  command = "bash '${herdrHook}' session";
+                  timeout = 10;
+                }
+              ];
+            }
+          ];
+        };
       }
       // lib.optionalAttrs (cfg.authTokenFile != null) {
         apiKeyHelper = "cat ${lib.escapeShellArg cfg.authTokenFile}";
