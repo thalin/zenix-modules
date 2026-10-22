@@ -28,6 +28,9 @@ let
       text = builtins.readFile ./claude-code/delegation-nudge.sh;
     }
   );
+  proxyHelper = lib.optionalString (
+    cfg.authTokenFile != null
+  ) "cat ${lib.escapeShellArg cfg.authTokenFile}";
   nudgeHook = arg: {
     type = "command";
     command = "${delegationNudge}${arg}";
@@ -48,14 +51,29 @@ in
       '';
     };
 
+    proxy = {
+      enable = mkEnableOption ''
+        routing Claude Code through the cli-proxy-api gateway. When off, the
+        gateway URL and token helper this module set earlier are removed from
+        settings.json, so a normal Claude login (e.g. a team account) works
+      '';
+
+      baseUrl = mkOption {
+        type = types.str;
+        default = "https://cli-proxy-api.zen-finity.com";
+        description = "Gateway URL, set as env.ANTHROPIC_BASE_URL.";
+      };
+    };
+
     authTokenFile = mkOption {
       type = types.nullOr types.str;
       default = null;
       example = "/run/user/1000/secrets/claude_proxy_token";
       description = ''
         Runtime path to the gateway auth token (sops-nix or similar), read via
-        apiKeyHelper. When set, any plaintext env.ANTHROPIC_AUTH_TOKEN is removed
-        from settings.json. Keep this a string so the secret never hits the store.
+        apiKeyHelper when proxy.enable is set. When set, any plaintext
+        env.ANTHROPIC_AUTH_TOKEN is removed from settings.json. Keep this a string
+        so the secret never hits the store.
       '';
     };
   };
@@ -78,8 +96,6 @@ in
     zen.ai.claude-code.settings = lib.mapAttrsRecursive (_: mkDefault) (
       {
         env = {
-          ANTHROPIC_BASE_URL = "https://cli-proxy-api.zen-finity.com";
-          CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY = "1";
           API_TIMEOUT_MS = "600000";
           BASH_DEFAULT_TIMEOUT_MS = "600000";
           BASH_MAX_TIMEOUT_MS = "600000";
@@ -92,6 +108,10 @@ in
           _ZO_DOCTOR = "0";
           # Agents without their own model (general-purpose, workflow stages) use Sonnet.
           CLAUDE_CODE_SUBAGENT_MODEL = "sonnet";
+        }
+        // lib.optionalAttrs cfg.proxy.enable {
+          ANTHROPIC_BASE_URL = cfg.proxy.baseUrl;
+          CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY = "1";
         };
         # allow/deny are left out so "always allow" answers survive activation.
         permissions.defaultMode = "auto";
@@ -140,8 +160,8 @@ in
           ];
         };
       }
-      // lib.optionalAttrs (cfg.authTokenFile != null) {
-        apiKeyHelper = "cat ${lib.escapeShellArg cfg.authTokenFile}";
+      // lib.optionalAttrs (cfg.proxy.enable && cfg.authTokenFile != null) {
+        apiKeyHelper = proxyHelper;
       }
     );
 
@@ -154,6 +174,15 @@ in
           { "$schema" = "https://json.schemastore.org/claude-code-settings.json"; } // cfg.settings
         );
         dropToken = lib.optionalString (cfg.authTokenFile != null) " | del(.env.ANTHROPIC_AUTH_TOKEN)";
+        # The merge never removes keys, so turning the proxy off has to undo what
+        # it set; only values this module wrote are touched.
+        dropProxy = lib.optionalString (!cfg.proxy.enable) (
+          " | if .env.ANTHROPIC_BASE_URL == $proxyUrl"
+          + " then del(.env.ANTHROPIC_BASE_URL, .env.CLAUDE_CODE_ENABLE_GATEWAY_MODEL_DISCOVERY) else . end"
+          + lib.optionalString (
+            cfg.authTokenFile != null
+          ) " | if .apiKeyHelper == $proxyHelper then del(.apiKeyHelper) else . end"
+        );
       in
       lib.hm.dag.entryAfter [ "writeBoundary" ] ''
         settings=${lib.escapeShellArg settingsFile}
@@ -172,7 +201,10 @@ in
           fi
           # mktemp gives 0600, which suits a file that may still hold a token.
           tmp="$(mktemp "$settings.XXXXXX")"
-          ${jq} -s '.[0] * .[1]${dropToken}' <(printf '%s' "$current") ${declared} > "$tmp"
+          ${jq} -s \
+            --arg proxyUrl ${lib.escapeShellArg cfg.proxy.baseUrl} \
+            --arg proxyHelper ${lib.escapeShellArg proxyHelper} \
+            '.[0] * .[1]${dropToken}${dropProxy}' <(printf '%s' "$current") ${declared} > "$tmp"
           # Drops a leftover store symlink too, instead of writing through it.
           mv -f "$tmp" "$settings"
         fi
